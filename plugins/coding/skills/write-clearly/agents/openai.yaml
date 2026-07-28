@@ -1,0 +1,4 @@
+interface:
+  display_name: "Write Clearly"
+  short_description: "Make prose clear, concrete, and unambiguous"
+  default_prompt: "Use $coding:write-clearly to revise this prose for clarity and unambiguous execution without changing its meaning or voice."
