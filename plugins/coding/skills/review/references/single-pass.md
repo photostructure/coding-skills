@@ -13,6 +13,28 @@ apply fixes.
   the repository state yourself.
 - Use the supplied scrutiny list as a starting point, not as a limit.
 
+## What to look for
+
+**Correctness**
+
+- Logic or implementation errors
+- Code that is correct but surprising — suggest a clearer equivalent or a comment
+- Don't trust docs or implementation as authoritative. If they disagree, flag it,
+  consider what you think is correct (it may be neither), and explain your
+  reasoning
+
+**Code quality**
+
+- Violations of the project's design principles or coding standards
+- Dead code — suggest deleting it
+- Doc comments that have drifted from the implementation, or that merely restate
+  the function name — suggest removing
+
+**Testing and documentation**
+
+- Missing coverage for critical paths or edge cases
+- Test fixtures that need updating
+
 ## Verify every candidate
 
 Report only issues that are actually wrong. For each candidate:
