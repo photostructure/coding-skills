@@ -28,7 +28,7 @@ TypeScript web and Electron desktop applications.
 - **Replaced numeric confidence scoring** (Anthropic's >80% threshold / 1–10 scores)
   with a **proof gate** — a finding is reported only with concrete data-flow, exposure,
   or configuration proof, otherwise it's a "Needs verification" lead or dropped. This
-  aligns with the sibling `coding/review` and `coding/double-review` skills' rule that
+  aligns with the sibling `coding/review` and `coding/second-opinion` skills' rule that
   reviewer confidence is not evidence; only proof is.
 - **Added self-hosting and DB depth** beyond the three upstreams, synthesized from the
   broader OWASP Cheat Sheet Series (SQL/NoSQL Injection, Mass Assignment, Authentication,

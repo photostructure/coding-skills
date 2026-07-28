@@ -376,21 +376,37 @@ def validate_portability_tokens(validation: Validation) -> None:
             r"\$(?:tpp|handoff|project-setup|resource-review|web-security-review)\b"
         ),
     }
+    # The second-opinion gate is the one skill whose purpose is to invoke the
+    # *other* vendor's CLI, so it must name both hosts. Every other portability
+    # rule still applies to it.
+    host_naming_rules = {
+        "Claude model class",
+        "Claude wrapper",
+        "Codex-only runtime wording",
+    }
+    host_naming_exempt = {Path("plugins/coding/skills/second-opinion/SKILL.md")}
+
     for path in operational:
+        relative = path.relative_to(ROOT)
+        exempt = relative in host_naming_exempt
         content = path.read_text(encoding="utf-8")
         for label, pattern in forbidden.items():
+            if exempt and label in host_naming_rules:
+                continue
             if pattern.search(content):
-                validation.errors.append(f"{path.relative_to(ROOT)}: contains {label}")
+                validation.errors.append(f"{relative}: contains {label}")
 
+        if exempt:
+            continue
         for number, line in enumerate(content.splitlines(), start=1):
             if "Claude" not in line:
                 continue
             if "CLAUDE.md" in line or "photostructure.com/coding/claude-code" in line:
                 continue
-            validation.errors.append(f"{path.relative_to(ROOT)}:{number}: unexpected Claude runtime reference")
+            validation.errors.append(f"{relative}:{number}: unexpected Claude runtime reference")
 
     for relative in (
-        "plugins/coding/skills/double-review/SKILL.md",
+        "plugins/coding/skills/second-opinion/SKILL.md",
         "plugins/coding/skills/stage/SKILL.md",
     ):
         content = (ROOT / relative).read_text(encoding="utf-8")

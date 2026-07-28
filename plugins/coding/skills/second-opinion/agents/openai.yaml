@@ -1,0 +1,4 @@
+interface:
+  display_name: "Second Opinion"
+  short_description: "Get a cross-model review, vetted against ground truth"
+  default_prompt: "Use $coding:second-opinion to get a cross-model review and vet every finding."

@@ -1,6 +1,6 @@
 ---
 name: tpp-orchestrate
-description: Work through a queue of Technical Project Plans serially — delegate each to a TDD subagent, run two independent reviews, empirically vet every finding, and land one coherent commit per plan. Use when executing a documented plan queue such as _todo/ or _feat-name/ for a port, migration, or multi-stage feature.
+description: Work through a queue of Technical Project Plans serially — delegate each to a TDD subagent, get a cross-model second opinion, empirically vet every finding, and make one coherent commit per plan. Use when executing a documented plan queue such as _todo/ or _feat-name/ for a port, migration, or multi-stage feature.
 ---
 
 # TPP Orchestration
@@ -18,17 +18,17 @@ defined in the bundled [TPP-GUIDE.md](../tpp/TPP-GUIDE.md), or the project's own
 _single_ plan within a session; this skill is the loop that drives a whole queue
 of them through subagents and review gates.
 
-Two failure modes motivate this loop:
-
-1. **A subagent's green test suite is not proof of correctness.** Agents satisfice: they implement until _their own_ tests pass, and real bugs (semantic mismatches with the spec, stateful-API gotchas, edge cases the tests never pin) survive. Independent review catches these.
-2. **Reviewers are confidently wrong, too.** Every review pass produces a mix of real bugs and plausible-but-wrong findings. Accepting blindly injects regressions; vetoing blindly ships the bugs. Only _empirical verification against ground truth_ settles a finding.
-
-So: delegate, review twice, and vet everything with evidence.
+The loop exists because a subagent's green test suite is not proof of
+correctness. [`../second-opinion/SKILL.md`](../second-opinion/SKILL.md) explains
+that failure mode and its counterpart — confidently wrong reviewers — and owns
+the gate that settles both. This skill owns the queue around it: delegate,
+gate, record, commit, repeat.
 
 ## Before the first TPP
 
 - Read the roadmap and every queued TPP's summary. Confirm dependency order.
-- Identify the project's **ground truth** — the thing a disputed finding can be tested against: a reference implementation you can execute, a spec with runnable examples, the real runtime/API. Write down _how_ to query it (the exact command). If there is no executable ground truth, say so and agree on the fallback (spec text, maintainer decision) with the user.
+- Identify the project's **ground truth** as the gate defines it, and write down
+  the exact command to query it. Every TPP in the queue is vetted against it.
 - Ask the user any clarifying questions **now** — scope ambiguities are cheapest
   to resolve before any code exists.
 
@@ -63,29 +63,22 @@ Triage the subagent's open questions. Ask the user about decision-worthy ones
 **before** the review gate — a review of code built on a wrong assumption is
 wasted.
 
-### 4. Review twice, independently
+### 4. Run the review gate
 
-Run the double-review gate on the TPP's diff — read and follow
-[../double-review/SKILL.md](../double-review/SKILL.md): use two independent,
-mutually blind leaf reviewers over the identical scope, while you read the new
-code yourself as the third reviewer — the only one who knows the whole roadmap.
-The gate owns reviewer creation: do not add reviewers here or hand them another
-workflow skill. Scope both leaf prompts with this TPP's spec/reference files,
-the diff range, and a scrutiny list of the riskiest areas the plan touches. Use
-an external reviewer only when the gate requires its fallback.
+Read and follow [../second-opinion/SKILL.md](../second-opinion/SKILL.md) on this
+TPP's diff. The gate owns reviewer creation, vetting, and pinning tests — do not
+add reviewers here or restate its rules. Give it this TPP's spec/reference
+files, the diff range, and a scrutiny list of the riskiest areas the plan
+touches.
 
-### 5. Vet every finding — accept and veto only with proof
+You are the gate's second reviewer, and the only one who knows the whole roadmap.
+Read the new code yourself while the external review runs.
 
-Per the gate (steps 3-4 of `double-review`): test each finding against the
-ground truth you identified before the first TPP; accept or veto only with
-that evidence; every accepted finding gets a pinning test whose expected
-values come from ground truth. Full suite green again.
+### 5. Record the verdicts
 
-### 6. Record the verdicts
+Add a "Post-review fixes" section to the TPP listing every finding — accepted **and** vetoed — with the evidence for each verdict and which model raised it. Vetoes especially: the next session will see the same "bug" and must not re-litigate it.
 
-Add a "Post-review fixes" section to the TPP listing every finding — accepted **and** vetoed — with the evidence for each verdict. Vetoes especially: the next session will see the same "bug" and must not re-litigate it.
-
-### 7. Close out
+### 6. Close out
 
 Move the TPP to `_done/`, update the roadmap's status section, and make **one coherent commit per TPP** (implementation + tests + TPP move together), following the repo's commit conventions. Then start the next TPP.
 
@@ -98,6 +91,6 @@ Move the TPP to `_done/`, update the roadmap's status section, and make **one co
 ## Adapting for your project
 
 - **Name the ground truth explicitly** — e.g. "CPython 3.12 via `uv run python -c ...` in the reference submodule", "the staging API", "the RFC's test vectors". The vetting step is only as strong as this.
-- **Reviewer choices and scrutiny-list tuning** live in the gate — adapt [../double-review/SKILL.md](../double-review/SKILL.md), and this loop inherits it.
+- **Reviewer choices and scrutiny-list tuning** live in the gate — adapt [../second-opinion/SKILL.md](../second-opinion/SKILL.md), and this loop inherits it.
 - **Tune the model heuristic** to your roster — the invariant is "risk decides the model", not the specific names.
 - **Rename the file conventions** (`_todo/`, `_feat-<name>/`, `_done/`, and the roadmap or queue README) to whatever your plan system uses; the loop doesn't care about paths.

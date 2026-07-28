@@ -1,6 +1,6 @@
 ---
 name: gitplan
-description: Plan and execute coherent Conventional Commit groupings for tangled working tree changes — multiple intertwined logical edits that need to land as separate, reviewable commits.
+description: Plan and execute coherent Conventional Commit groupings for tangled working tree changes — multiple intertwined logical edits that need to be split into separate, reviewable commits.
 ---
 
 **Applicability is about how tangled the changes are, not how many files they touch.** Invoke this skill when the working tree mixes multiple intertwined logical changes that need untangling into separate commits — even if that's only a handful of files. Skip it when the changes are trivial or superficial, no matter how many files they touch: formatter runs, lint autofixes, typo/grammar fixes, or edits that obviously belong in a single commit.
@@ -11,7 +11,7 @@ description: Plan and execute coherent Conventional Commit groupings for tangled
 
 **Never create megacommits.** Each commit should be focused, coherent, and reviewable.
 
-If the repository has a layered structure (e.g. shared utilities → core → feature packages → app), work through it from the lowest-level layer upward so dependencies land before their consumers.
+If the repository has a layered structure (e.g. shared utilities → core → feature packages → app), work through it from the lowest-level layer upward so dependencies are committed before their consumers.
 
 ## Workflow
 
@@ -29,13 +29,18 @@ If the repository has a layered structure (e.g. shared utilities → core → fe
 ### Phase 2: Stage, Review, and Commit (per theme)
 
 1. Stage only files belonging to the selected theme using `git add <files>`, including any related docs/plans decided in Phase 1.
-2. Review the staged changes (use the `review-staged` skill if available). Use a capable model — reviews are important.
-3. If issues are found:
+2. **Kick off the cross-model second opinion on the staged diff, in the background if the host supports it** — step 2 of [`../second-opinion/SKILL.md`](../second-opinion/SKILL.md). Start it first so it runs while you review. The external reviewer has no staged-only scope, so name the staged file list in the prompt: "review only these staged files: `<list>`; the other uncommitted changes belong to later commits — ignore them."
+3. Review the staged changes yourself using the `review-staged` skill. Use a capable model — reviews are important.
+4. Collect the second opinion, then vet every finding from both passes against ground truth — steps 3-5 of the gate. Accept and veto only with evidence.
+5. If issues are accepted:
    - Present them clearly with priority, problem, and proposed fix.
    - Apply fixes incrementally, re-staging as needed.
    - Re-review until clean.
-4. Present the proposed commit message and ask for approval. When the user approves, commit immediately — no second confirmation.
+6. Present the proposed commit message and ask for approval. When the user approves, commit immediately — no second confirmation.
    - **Commit messages drive the changelog.** The body should describe user-facing behavior changes (what users will see/experience), not just implementation details. Lead with the "what changed for users" — implementation notes are secondary.
+
+Skip the second opinion only when the user asks you to, or when the theme is
+purely mechanical (formatter run, lockfile bump). Say so when you skip it.
 
 ### Phase 3: Repeat
 
@@ -45,39 +50,11 @@ If the repository has a layered structure (e.g. shared utilities → core → fe
 
 ## Review Guidelines
 
-Review the staged code for potential issues and improvements. Follow project
-conventions in `AGENTS.md`, optional `CLAUDE.md`, and contributing guides.
+The per-theme review in Phase 2 is the `review-staged` workflow. Its method,
+delegation bound, and finding format live in
+[`../review/references/single-pass.md`](../review/references/single-pass.md) and
+[`../review/references/orchestration.md`](../review/references/orchestration.md);
+don't restate them here.
 
-## Review Focus
-
-### Critical Issues First
-
-- Logic errors, security vulnerabilities, performance problems
-- Breaking changes or API compatibility issues
-- Resource leaks (memory, file handles, database connections)
-
-### Code Quality
-
-- Adherence to the project's language conventions and error-handling patterns
-- Anti-patterns: hardcoded paths, magic numbers, tight coupling
-- Missing documentation on exported functions
-
-### Testing & Documentation
-
-- Test coverage for critical paths and edge cases
-- Documentation accuracy and completeness
-- Test fixture updates if needed
-
-## Response Format
-
-For each issue:
-
-- **Priority**: Critical/High/Medium/Low
-- **Code**: Quote specific problematic code
-- **Problem**: Clear explanation of the issue
-- **Solution**: Concrete fix or improvement suggestion
-- **Context**: File/line reference for easy navigation
-
-For documentation or trivial implementation issues, suggest the edit to the user and apply if they accept.
-
-For other issues, provide a unique identifier for each issue (e.g. #A or #B), a summary of the issue, where it's located, and a proposed solution. Ask the user and apply if they accept.
+This skill owns only the grouping decision: whether each theme is a single
+coherent commit, and how to split it if not.
