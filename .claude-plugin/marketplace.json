@@ -5,15 +5,15 @@
     "url": "https://photostructure.com/coding/"
   },
   "metadata": {
-    "description": "Opinionated Claude Code skills for disciplined planning, proof-based review, clean Conventional Commits, web and Electron security, modern C++, and maintainable Rust projects."
+    "description": "Opinionated Claude Code skills for disciplined planning, unambiguous technical writing, proof-based review, clean Conventional Commits, web and Electron security, modern C++, and maintainable Rust projects."
   },
   "plugins": [
     {
       "name": "coding",
       "source": "./plugins/coding",
-      "description": "Nine workflow skills: replan (iterative planning), review, review-staged, and double-review (proof-based code review), gitplan and stage (disciplined Conventional-Commit staging), and the Technical Project Plan workflow (tpp, handoff, tpp-orchestrate — multi-session plan files with serial orchestration, TDD subagents, and dual vetted reviews).",
+      "description": "Workflow skills: write-clearly (plain-language and unambiguous technical prose), replan (iterative planning), review, review-staged, and second-opinion (proof-based code review), gitplan and stage (disciplined Conventional-Commit staging), and the Technical Project Plan workflow (tpp, handoff, tpp-orchestrate — multi-session plan files with serial orchestration, TDD subagents, and cross-model vetted reviews).",
       "category": "workflow",
-      "keywords": ["claude-code", "code-review", "planning", "git", "conventional-commits"]
+      "keywords": ["claude-code", "code-review", "planning", "git", "conventional-commits", "technical-writing", "plain-language"]
     },
     {
       "name": "security",

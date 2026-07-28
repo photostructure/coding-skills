@@ -307,7 +307,7 @@ def validate_plugins_and_skills(validation: Validation, plugin_roots: dict[str, 
                 f"{marketplace_name}:{skill_name}",
             )
 
-    validation.check(validation.skill_count == 14, f"expected 14 skills, found {validation.skill_count}")
+    validation.check(validation.skill_count == 15, f"expected 15 skills, found {validation.skill_count}")
 
 
 def validate_install_documentation(validation: Validation) -> None:

@@ -3,10 +3,11 @@
 A dual [Codex](https://learn.chatgpt.com/docs/plugins) and
 [Claude Code](https://code.claude.com) plugin marketplace for disciplined
 planning, proof-based review, focused Git history, web and Electron security,
-modern C++ native development, and maintainable Rust projects. The same 14 skills
-are packaged natively for both products.
+modern C++ native development, and maintainable Rust projects. Every skill is
+packaged natively for both products.
 
-The `coding` plugin contains nine general engineering workflows. The `security`
+The `coding` plugin contains general engineering workflows, including a
+plain-language editing pass for technical prose. The `security`
 plugin pairs proof-gated JavaScript/TypeScript web and Electron vulnerability review
 with applicability-aware OWASP ASVS and Electron Security Checklist hardening
 assessments. The `cpp` plugin provides
@@ -19,10 +20,11 @@ and publishing preparation.
 
 | Plugin | Skill | Purpose |
 | --- | --- | --- |
+| coding | `write-clearly` | Clarify prose and make agent instructions unambiguous without changing meaning or voice. |
 | coding | `replan` | Iteratively critique alternatives before settling a complex design. |
 | coding | `review` | Review code and report only issues proven through the full code path. |
 | coding | `review-staged` | Apply the same proof gate to the staged diff before proposing a commit. |
-| coding | `double-review` | Run two mutually blind reviews, then accept or veto every finding with evidence. |
+| coding | `second-opinion` | Get a cross-model review, then accept or veto every finding with evidence. |
 | coding | `gitplan` | Untangle a mixed working tree into coherent Conventional Commits. |
 | coding | `stage` | Stage only the hunks attributable to the current body of work. |
 | coding | `tpp` | Continue the current phase of a living Technical Project Plan (TPP). |
@@ -62,6 +64,7 @@ namespaced by plugin, for example:
 $coding:replan
 $coding:review
 $coding:stage
+$coding:write-clearly
 $security:web-security-review
 $security:web-security-hardening
 $cpp:resource-review
@@ -90,8 +93,8 @@ codex plugin list
 
 Confirm the versions reported by `codex plugin list` match each plugin's
 `.codex-plugin/plugin.json`, then start a fresh Codex task under the same
-disposable `CODEX_HOME` and verify the `$` skill picker sees all 14 skills.
-Remove only that disposable directory when finished.
+disposable `CODEX_HOME` and verify the `$` skill picker lists every skill in the
+table above. Remove only that disposable directory when finished.
 
 ## Install in Claude Code
 
@@ -111,6 +114,7 @@ Invoke Claude Code skills with their plugin namespace:
 /coding:replan
 /coding:review
 /coding:gitplan
+/coding:write-clearly
 /security:web-security-review
 /security:web-security-hardening
 /cpp:resource-review
@@ -132,6 +136,11 @@ Point Claude Code at the repository root instead of the GitHub shorthand:
 
 Start a new task after installing or updating a plugin before testing its
 skills.
+
+The `gitplan` and `stage` skills teach an agent to curate the index. For the
+same discipline by hand, [photostructure/git-tools](https://github.com/photostructure/git-tools)
+has `git addgrep`, `git restage`, and `git post-fmt` as plain shell scripts for
+your `$PATH`.
 
 ## Repository layout
 
@@ -208,6 +217,13 @@ methodology through a `delegation-budget: 0` prompt contract and task-local
 context. Review skills keep a leaf-mode guard so an implicit skill match cannot
 restart orchestration. Setup-only plugins do not invent reviewer agents.
 
+`second-opinion` is the deliberate exception to the host-neutral rule: its whole
+job is to shell out to the *other* vendor's CLI (`codex exec review` from Claude
+Code, `claude -p` from Codex), so it names both hosts. The validator exempts
+that one file from the host-naming checks and applies every other portability
+rule to it. It falls back to a same-model reviewer, and says so, when the other
+CLI is missing or unauthenticated.
+
 ## Adapting the workflows
 
 The skills are intentionally generic. Prefer durable project instructions in
@@ -242,6 +258,7 @@ content rather than treating every commit on the tracked branch as a release.
 
 - [Claude picks the first idea that works. Make it pick the best one.](https://photostructure.com/coding/claude-code-replan/)
 - [Most AI code reviews are noise. Here's how to fix that.](https://photostructure.com/coding/claude-code-review/)
+- [Commit like a librarian.](https://photostructure.com/coding/clean-commits/)
 - [Claude Code has amnesia. So do PRs, changelogs, and your future self.](https://photostructure.com/coding/claude-code-tpp/)
 - [The LLM sycophancy antidote](https://photostructure.com/coding/you-are-absolutely-right/)
 - [If something is odd, inappropriate, confusing, or boring, it is probably important.](https://photostructure.com/coding/odd-inappropriate-confusing-or-boring/)

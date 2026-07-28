@@ -1,7 +1,7 @@
 {
   "name": "coding",
-  "version": "1.1.0",
-  "description": "Disciplined planning, proof-based code review, focused Git staging, and Technical Project Plan workflows for coding agents.",
+  "version": "2.1.0",
+  "description": "Disciplined planning, proof-based code review, focused Git staging, Technical Project Plans, and unambiguous technical writing for coding agents.",
   "author": {
     "name": "Matthew McEachen",
     "url": "https://photostructure.com/coding/"
@@ -15,13 +15,15 @@
     "planning",
     "git",
     "conventional-commits",
-    "technical-project-plans"
+    "technical-project-plans",
+    "technical-writing",
+    "plain-language"
   ],
   "skills": "./skills/",
   "interface": {
     "displayName": "Coding Workflows",
-    "shortDescription": "Plan, review, stage, and hand off coding work",
-    "longDescription": "Nine reusable workflows for iterative planning, evidence-backed review, precise Git staging, and multi-session Technical Project Plans.",
+    "shortDescription": "Plan, review, stage, and write clearly",
+    "longDescription": "Reusable workflows for iterative planning, evidence-backed review, precise Git staging, multi-session Technical Project Plans, and unambiguous technical prose.",
     "developerName": "PhotoStructure",
     "category": "Developer Tools",
     "capabilities": [
@@ -31,7 +33,8 @@
     "defaultPrompt": [
       "Review this change and report only verified issues.",
       "Turn these working-tree changes into coherent commits.",
-      "Continue this Technical Project Plan from its current phase."
+      "Continue this Technical Project Plan from its current phase.",
+      "Revise this technical prose for clarity and unambiguous execution without changing its meaning or voice."
     ]
   }
 }
