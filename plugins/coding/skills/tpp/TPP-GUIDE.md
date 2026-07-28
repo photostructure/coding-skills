@@ -70,14 +70,16 @@ The filesystem location is the source of truth.
 
 ### Feature integration queues
 
-Use `_feat-<name>/` when several TPPs must be coordinated and landed together
+Use `_feat-<name>/` when several TPPs must be coordinated and merged together
 on a feature branch, for example `_feat-auth/` or `_feat-face/`. This is a
 temporary integration queue, not another priority level.
 
 Each feature queue must contain a `README.md` defining its purpose, owning
-branch or worktree, dependency and landing order, completion gate, and the
-priority/frontmatter policy for its TPPs. Remove the queue after its completed
-plans move to `_done/` and the feature lands.
+branch or worktree, dependency and merge order, completion gate, and the
+priority/frontmatter policy for its TPPs. That README is the feature arc — see
+[How long should a TPP be?](#how-long-should-a-tpp-be) — so keep it to the shape
+of the work and leave implementation detail to its children. Remove the queue
+after its completed plans move to `_done/` and the feature merges.
 
 ## Frontmatter
 
@@ -145,14 +147,18 @@ Short description of the problem, under 10 lines.
 
 ## Current phase
 
-- [ ] Research & Planning
-- [ ] Write and validate breaking tests (if relevant)
-- [ ] Design alternatives and iterate to an optimal approach
-- [ ] Breakdown of tasks
-- [ ] Implementation of tasks
-- [ ] Review & Refinement
-- [ ] Final Integration verification
-- [ ] Review
+Next: the one thing the next session does first.
+
+- [x] Research — finding, or a pointer to where it landed
+- [x] Breaking tests — `test/foo.test.ts:"rejects empty tag"`
+- [ ] Design settled — Option A, pending B's perf numbers
+- [ ] Implementation
+- [ ] Integration verified — `npm run test:integration`
+- [ ] Reviewed
+
+These are independent state, not a sequence: work loops back. Re-open a box when
+new information invalidates it and say why in Lore. Name the boxes this plan
+actually has — the list above is an example, not a ritual to reproduce.
 
 ## Required reading
 
@@ -190,21 +196,80 @@ Describe any serious alternative and why it was rejected or deferred.
 
 ## Tasks
 
-Each task should include:
-
-- Clear deliverable
-- Implementation details
-- Integration points
-- Verification command
+Each task names its deliverable and the **acceptance test that proves it** — the
+test file and case, or the exact command to run. A runnable test is a shorter
+and stricter spec than a paragraph of implementation notes. Add prose only for
+integration points a test can't express.
 ```
 
 ## Keeping TPPs useful
 
-Do not let the TPP become a transcript. Trim redundant notes, stale observations,
-and obvious commentary. Preserve the facts that will save the next session time.
+Every line must be something the next session could not cheaply rediscover. Cut
+anything the code, the tests, or `git log` already say.
 
-Try to keep full TPPs under 400 lines. If that is impossible, split the work into
-multiple TPPs.
+**Prefer a pointer to prose.** Name the test that pins the behavior, the commit
+that broke it, the file that defines the constraint — don't describe them. The
+next session can read the real thing, and the real thing doesn't go stale.
+
+**Never record a count that drifts.** "36 tests passing", "12 files changed",
+coverage percentages — all stale the moment the next commit lands, and worse
+than useless: a reviewer who spots the mismatch spends their attention arguing
+that the number is off by one instead of on the work. Record the command that
+produces the number, not the number. `npm test -- tag-gallery` passes is a
+durable claim; "36 tests pass" is a hostage to the next commit.
+
+The high-value sections are **Lore** and the failed approaches under
+**Solutions**: gotchas, dead ends, and the *why* behind decisions are exactly
+what a fresh session cannot recover from the repository. Everything else is
+scaffolding — keep it thin.
+
+These four readers all pay for bloat and all benefit from the same edit: the
+next session, the PR reviewer, whoever drafts the release notes, and whoever
+inherits this code years from now. Trim process ceremony, not the reasoning.
+
+## How long should a TPP be?
+
+Wrong question — and any number that answers it becomes an anchor people write
+toward. **Length is a symptom. The rule underneath it is focus.**
+
+A TPP covers one coherent piece of work. The test: say what it does in one
+sentence, without an "and". If you can't, you're holding either a plan that
+needs trimming or a feature arc that needs children.
+
+Why it matters isn't tidiness. Every line you leave in costs the next engineer
+attention and context window — a budget they cannot top up, spent on your notes
+instead of the problem. Writing a tome spends someone else's scarcest resource.
+
+Three rules, no arithmetic:
+
+- **Never pad.** A 60-line plan that says everything beats a 200-line plan
+  saying the same thing. The template is a menu, not a form: delete any heading
+  with nothing worth saying under it.
+- **Never trim reasoning to hit a number.** If a plan is long because it carries
+  hard-won lore, it is correctly long. Cut scaffolding, restated code, and
+  drifting counts first — and if it's still long after that, it's fine.
+- **Treat length as a prompt to re-read, not a limit.** Somewhere past a couple
+  hundred lines, stop and ask the focus question. Usually the answer is bloat.
+  Occasionally it's an arc.
+
+### When the work really is bigger
+
+Don't shred a focused plan into siblings that must coordinate — that moves the
+complexity into the gaps between files, where nobody owns it. Promote it to a
+**feature arc** instead: one coordination TPP over several focused children.
+
+The arc owns the shape of the work — dependency and merge order, the completion
+gate, the lore every child needs, and the one-sentence purpose. The children own
+the work itself: their own tasks, tests, and gotchas. An arc that starts
+accumulating implementation detail has stopped being an arc and become a tome
+with extra steps.
+
+An arc stays short *because* its children are focused. In the layouts above, the
+arc is the `_feat-<name>/README.md`.
+
+Children need real seams: each must be **independently testable and
+independently mergeable**. If a child can't be verified without its sibling's
+code, that isn't a seam — it's one plan wearing two filenames.
 
 ## Handoff rules
 
