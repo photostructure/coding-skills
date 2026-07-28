@@ -7,7 +7,7 @@ For ancillary controls, define a secure degradation policy that also considers a
 
 ## Fail-open shapes to grep for
 
-Every security decision has an error path; the review question is where that path lands.
+Every security decision has an error path; the review question is where that path ends up.
 
 - Auth/authz middleware whose `catch` (or validation-miss branch) calls `next()` with no
   argument, `return next()`, or drops through to the handler. Grep middleware for
