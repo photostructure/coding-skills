@@ -49,28 +49,74 @@ Before launching anything, write down:
 
 You know which model you are. Ask the other one.
 
+Both commands run under a supervisor that kills the reviewer after 15 minutes of
+silence and reaps its whole process group. The window is deliberately generous:
+a working review goes quiet for a couple of minutes at a stretch, and a whole
+review can take 30-45 minutes.
+
 **If you are Claude, ask Codex:**
 
 ```bash
-codex exec review --base main "<scope, ground truth, scrutiny list, and: report only issues you can prove, with file:line and a concrete failing scenario; say 'No issues found' rather than padding>"
+python3 "<this-skill>/scripts/run_with_idle_timeout.py" -- \
+  codex exec \
+  -C "<target-repository>" \
+  --sandbox read-only \
+  --ephemeral \
+  -c 'model_reasoning_effort="high"' \
+  review "<same prompt>" \
+  > "<review-file>"
 ```
 
-Use `--commit <sha>` for a commit you already made, or `--uncommitted` for
-working-tree and staged changes. `codex exec review` is read-only and
-non-interactive.
+Name the diff range in the prompt itself — "the uncommitted changes", "the
+changes since `<sha>`". Do **not** reach for `--base`, `--commit`, or
+`--uncommitted`: each is mutually exclusive with a custom prompt, so adding one
+kills the run in milliseconds with exit 2 and your scrutiny list never arrives.
+Codex sends progress to stderr and its final review to stdout, so the redirect
+captures a clean review while the stream stays watchable.
 
 **If you are Codex, ask Claude:**
 
 ```bash
-claude -p "<same prompt>" --permission-mode plan
+python3 "<this-skill>/scripts/run_with_idle_timeout.py" -- \
+  claude -p "<same prompt>" \
+  --permission-mode plan \
+  --model opus \
+  --effort high \
+  --output-format stream-json --verbose \
+  > "<events-file>"
 ```
 
-`--permission-mode plan` keeps it read-only. Add `--model opus` for large,
-novel, or security-sensitive work.
+`--permission-mode plan` keeps it read-only. `--output-format stream-json` is
+what keeps the supervisor fed — plain `-p` prints nothing at all until it
+finishes. Both the reasoning and the tool calls stream, so watch the file to see
+what the reviewer is chewing on. Extract the review after a clean exit:
 
-Start the review in the background if your host supports it, and **read the new
-code yourself while it runs** — you are the other reviewer, and the only one who
-knows the full context of what the change was supposed to do.
+```bash
+jq -r 'select(.type=="result").result' "<events-file>"
+```
+
+Default to high effort; use xhigh for large or novel changes, security
+boundaries, concurrency, subtle stateful APIs, or hard-to-reproduce failures.
+
+Resolve `<this-skill>` to this skill's directory. Run either command in the
+background and poll the same job until it exits:
+
+- **0** — read the review.
+- **124 with the supervisor's `idle timeout:` diagnostic** — the reviewer went
+  silent for 15 minutes. Discard the partial review, say so, and finish your own
+  pass.
+- **124 without that diagnostic** — the reviewer CLI itself returned 124.
+  Report its status and finish your own pass; do not call it an idle timeout.
+- **a fast non-zero with a CLI usage or unknown-option diagnostic** — the
+  invocation is stale. Report it as a bug in this skill; never let it pass as
+  "no issues found".
+- **127 or an authentication error** — use the missing/unauthenticated fallback
+  below. These are environment failures, not bugs in this skill.
+- **any other non-zero** — report the status and finish your own pass.
+
+**Read the new code yourself while the external review runs** — you are the
+other reviewer, and the only one who knows the full context of what the change
+was supposed to do.
 
 Keep the two passes independent: give the external reviewer the scoped prompt
 and repository state, never your suspected findings or interim conclusions.
@@ -120,8 +166,8 @@ rediscover the same "bug" and must not re-litigate it.
   implementation via `./third-party/tool/run`", "CPython 3.12 via
   `uv run python -c ...`", "the RFC's test vectors". The vetting step is only as
   strong as this.
-- **Pin the base branch** in the `codex exec review --base` example if yours
-  isn't `main`.
+- **Say how to name the diff range** the way your project talks about it — "the
+  changes on this branch vs `develop`", "everything since the last tag".
 - **Tune the scrutiny list** to your codebase's recurring failure modes and bake
   the worst offenders into this file.
 - **Callers welcome**: other skills (`gitplan`, `tpp-orchestrate`) reference this
