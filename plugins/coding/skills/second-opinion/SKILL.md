@@ -208,6 +208,16 @@ Reviewer confidence, eloquence, and *agreement between the two passes* are not
 evidence. Two models converging on the same wrong finding is common; one command
 against ground truth beats both.
 
+Route the vet to the **authoring session** when one is resumable — its context
+of settled decisions and corrected premises catches plausible-but-wrong
+findings a fresh vetter cannot, and authors regularly (correctly) veto reviewer
+findings for exactly that reason. An author's veto carries no special weight,
+though: it needs the same recorded proof as anyone's, and whoever supervises
+the gate audits veto evidence rather than trusting the author's stake in their
+own code. Author context can also *contain* the defect — a wrong premise the
+session has carried since birth — which is what the independent finder pass is
+for.
+
 ## 4. Fix and pin
 
 Apply accepted fixes. **Every accepted finding gets a pinning test** whose
