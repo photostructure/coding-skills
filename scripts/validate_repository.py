@@ -442,6 +442,7 @@ def validate_portability_tokens(validation: Validation) -> None:
         '--prompt-file "<prompt-file>"',
         "  codex exec \\",
         '  claude -p "{prompt}" \\',
+        "does not begin with the required LAND, REVISE, or DISCARD verdict",
     ):
         validation.check(
             token in second_opinion_content,

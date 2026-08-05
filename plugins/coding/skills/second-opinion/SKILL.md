@@ -171,9 +171,11 @@ background and poll the same job until it exits:
   "no issues found".
 - **127 or an authentication error** — use the missing/unauthenticated fallback
   below. These are environment failures, not bugs in this skill.
-- **0 with an `Unknown command` or missing-skill result** — the CLI did not load
-  the plugin. Treat it as a plugin-loading failure, not a clean review, and use
-  the pasted-method fallback below.
+- **0 with an `Unknown command`, a missing-skill result, or a final review that
+  does not begin with the required LAND, REVISE, or DISCARD verdict** — the CLI
+  did not run the shared method. Treat it as a plugin-loading failure, not a
+  clean review, and use the pasted-method fallback below. Allow ordinary
+  Markdown decoration around the verdict text.
 - **any other non-zero** — report the status and finish your own pass.
 
 **Read the new code yourself while the external review runs** — you are the
