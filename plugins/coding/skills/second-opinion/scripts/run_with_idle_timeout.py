@@ -17,12 +17,14 @@ import subprocess
 import sys
 import threading
 import time
+from pathlib import Path
 from typing import BinaryIO
 
 
 IDLE_TIMEOUT_EXIT = 124
 BROKEN_PIPE_EXIT = 141
 PROCESS_POLL_SECONDS = 0.1
+PROMPT_PLACEHOLDER = "{prompt}"
 
 TEARDOWN_SIGNALS = tuple(
     sig
@@ -49,12 +51,26 @@ def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--idle-seconds", type=positive_seconds, default=900)
     parser.add_argument("--grace-seconds", type=positive_seconds, default=30)
+    parser.add_argument("--prompt-file", type=Path)
     parser.add_argument("command", nargs=argparse.REMAINDER)
     args = parser.parse_args()
     if args.command[:1] == ["--"]:
         args.command = args.command[1:]
     if not args.command:
         parser.error("a command is required after --")
+    if args.prompt_file is not None:
+        if args.command.count(PROMPT_PLACEHOLDER) != 1:
+            parser.error(
+                "command must contain exactly one {prompt} placeholder"
+            )
+        try:
+            prompt = args.prompt_file.read_bytes().decode("utf-8")
+        except (OSError, UnicodeDecodeError) as error:
+            parser.error(f"cannot read UTF-8 prompt file: {error}")
+        args.command = [
+            prompt if argument == PROMPT_PLACEHOLDER else argument
+            for argument in args.command
+        ]
     return args
 
 

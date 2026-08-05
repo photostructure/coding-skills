@@ -22,7 +22,7 @@ Read both references and follow them:
 
 - [`references/single-pass.md`](./references/single-pass.md) — the review method:
   scope, what to look for, verification discipline, exclusions, and the fields
-  every finding must carry.
+  every finding must carry, plus the required LAND, REVISE, or DISCARD verdict.
 - [`references/orchestration.md`](./references/orchestration.md) — the top-level
   rules: what to study first, the two-leaf delegation bound, and how to present
   findings for the user to adjudicate.

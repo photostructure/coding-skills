@@ -38,8 +38,10 @@ perform the same exploration and validation yourself.
 ## Response format
 
 Omit any issue that turned out to be noise after research. Sort the rest by
-severity (Critical → High → Medium → Low). If nothing survives, say
-"No issues found." Do not pad the list.
+severity (Critical → High → Medium). Do not report Low-severity findings or
+unlikely corner cases. Begin with the LAND, REVISE, or DISCARD verdict required
+by [`single-pass.md`](./single-pass.md). If nothing survives, say "No issues
+found." after the verdict. Do not pad the list.
 
 **Step 1 — write up every issue as text first.** Give each a short ID (`#A`,
 `#B`) and the fields listed in [`single-pass.md`](./single-pass.md): Priority,

@@ -202,6 +202,64 @@ class RunWithIdleTimeoutTest(unittest.TestCase):
         self.assertEqual(127, result.returncode)
         self.assertIn("command not found:", result.stderr)
 
+    def test_prompt_file_is_passed_as_one_literal_argument(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            marker = Path(directory, "shell-expanded")
+            prompt_file = Path(directory, "prompt.txt")
+            prompt = (
+                "don't expand $HOME or `commands` or "
+                f"$(touch {marker})\nkeep the newline\n"
+            )
+            prompt_file.write_bytes(prompt.encode("utf-8"))
+            result = subprocess.run(
+                [
+                    sys.executable,
+                    str(SCRIPT),
+                    "--prompt-file",
+                    str(prompt_file),
+                    "--",
+                    sys.executable,
+                    "-c",
+                    "import sys;print(sys.argv[1],end='')",
+                    "{prompt}",
+                ],
+                capture_output=True,
+                check=False,
+                text=True,
+                timeout=2,
+            )
+
+            self.assertEqual(0, result.returncode)
+            self.assertEqual(prompt, result.stdout)
+            self.assertFalse(marker.exists())
+
+    def test_prompt_file_requires_exactly_one_placeholder(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            prompt_file = Path(directory, "prompt.txt")
+            prompt_file.write_text("review this", encoding="utf-8")
+            for command in (["missing"], ["{prompt}", "{prompt}"]):
+                with self.subTest(command=command):
+                    result = subprocess.run(
+                        [
+                            sys.executable,
+                            str(SCRIPT),
+                            "--prompt-file",
+                            str(prompt_file),
+                            "--",
+                            *command,
+                        ],
+                        capture_output=True,
+                        check=False,
+                        text=True,
+                        timeout=2,
+                    )
+
+                    self.assertEqual(2, result.returncode)
+                    self.assertIn(
+                        "command must contain exactly one {prompt} placeholder",
+                        result.stderr,
+                    )
+
     @unittest.skipUnless(os.name == "posix", "POSIX process groups")
     def test_normal_exit_kills_grandchild_that_inherits_pipes(self) -> None:
         with tempfile.TemporaryDirectory() as directory:

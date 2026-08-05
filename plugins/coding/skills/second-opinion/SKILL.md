@@ -37,6 +37,14 @@ Before launching anything, write down:
 
 - **The diff range** — commit range, staged diff, or working-tree diff, plus the
   file list. Both reviews get exactly the same scope.
+- **The claimed intent** — the proposed Conventional Commit message for the
+  change. Draft one first if it does not exist; without it, the reviewer cannot
+  ask whether the diff delivers exactly what the message claims, no more and no
+  less.
+- **Pasted context** — plan or TPP excerpts, settled decisions the reviewer must
+  not re-litigate, and the project's own review exclusions. Paste their text
+  into the prompt. A spawned CLI cannot chase references or basenames; anything
+  absent from the prompt does not exist for it.
 - **The ground truth** — the thing a disputed finding can be tested against: a
   reference implementation you can execute, a spec with runnable examples, the
   real API. Write the *exact command* to query it. No executable ground truth?
@@ -54,31 +62,53 @@ silence and reaps its whole process group. The window is deliberately generous:
 a working review goes quiet for a couple of minutes at a stretch, and a whole
 review can take 30-45 minutes.
 
+Write the complete reviewer prompt to a fresh UTF-8 temporary file with the
+host's file-writing tool. Do not interpolate supplied text into a shell command:
+commit messages and pasted context can contain quotes, dollar signs, backticks,
+or command substitutions. The supervisor replaces the exact `{prompt}` argument
+with the file's contents as one literal process argument. Delete the temporary
+file after the reviewer exits.
+
 **If you are Claude, ask Codex:**
 
 ```bash
-python3 "<this-skill>/scripts/run_with_idle_timeout.py" -- \
+python3 "<this-skill>/scripts/run_with_idle_timeout.py" \
+  --prompt-file "<prompt-file>" -- \
   codex exec \
   -C "<target-repository>" \
   --sandbox read-only \
   --ephemeral \
   -c 'model_reasoning_effort="high"' \
-  review "<same prompt>" \
+  "{prompt}" \
   > "<review-file>"
 ```
 
-Name the diff range in the prompt itself — "the uncommitted changes", "the
-changes since `<sha>`". Do **not** reach for `--base`, `--commit`, or
-`--uncommitted`: each is mutually exclusive with a custom prompt, so adding one
-kills the run in milliseconds with exit 2 and your scrutiny list never arrives.
+Begin the prompt file with `$coding:review`; use `$coding:review-staged` instead
+when the scope is the staged diff. Invoke plain `codex exec`, not
+`codex exec review`: the `review` subcommand substitutes Codex's built-in review
+prompt and cannot load this marketplace's skill. Name the diff range in the
+prompt itself — "the uncommitted changes", "the changes since `<sha>`". Codex
+needs the coding plugin installed:
+
+```bash
+codex plugin marketplace add photostructure/coding-skills
+codex plugin add coding@photostructure
+```
+
 Codex sends progress to stderr and its final review to stdout, so the redirect
 captures a clean review while the stream stays watchable.
 
 **If you are Codex, ask Claude:**
 
+Run the command with the target repository as its working directory. Resolve
+`<coding-plugin-root>` to the plugin directory that contains this skill so the
+spawned process does not depend on user- or repository-scoped plugin settings.
+
 ```bash
-python3 "<this-skill>/scripts/run_with_idle_timeout.py" -- \
-  claude -p "<same prompt>" \
+python3 "<this-skill>/scripts/run_with_idle_timeout.py" \
+  --prompt-file "<prompt-file>" -- \
+  claude -p "{prompt}" \
+  --plugin-dir "<coding-plugin-root>" \
   --permission-mode plan \
   --model opus \
   --effort high \
@@ -95,8 +125,37 @@ what the reviewer is chewing on. Extract the review after a clean exit:
 jq -r 'select(.type=="result").result' "<events-file>"
 ```
 
+Begin the prompt file with `/coding:review`; use `/coding:review-staged` instead
+when the scope is the staged diff. The `-p` prompt must begin with the slash
+command so Claude invokes the skill directly. An unavailable slash command is a
+plugin-loading failure even when Claude exits 0.
+
 Default to high effort; use xhigh for large or novel changes, security
 boundaries, concurrency, subtle stateful APIs, or hard-to-reproduce failures.
+
+The command shapes above were empirically validated against a tiny committed
+repository with Claude Code 2.1.222 and `codex-cli` 0.146.1. Do not substitute a
+similarly named built-in review mode without re-validating it against a real
+diff.
+
+Construct the prompt file with all of the following:
+
+- the review skill to follow: `coding:review` for a commit, range, or
+  working-tree scope; `coding:review-staged` for the staged diff
+- `role: leaf-reviewer` and `delegation-budget: 0`, so the named skill runs the
+  shared single-pass method and returns one report without delegating, asking
+  for adjudication, or entering a commit flow
+- the diff scope, named in the prompt rather than only through CLI flags
+- the proposed commit message verbatim as the claimed intent, with the
+  instruction that any diff-versus-message mismatch is a High finding
+- the pasted context and scrutiny list verbatim
+- the ground truth and the exact command or procedure for querying it
+
+Name the review skill; never name `second-opinion` in the reviewer prompt. The
+reviewer must review the change, not recurse into another second opinion. If the
+spawned CLI cannot load the coding plugin, rerun it with the full text of
+[`../review/references/single-pass.md`](../review/references/single-pass.md)
+pasted into the prompt instead of naming the review skill.
 
 Resolve `<this-skill>` to this skill's directory. Run either command in the
 background and poll the same job until it exits:
@@ -112,6 +171,9 @@ background and poll the same job until it exits:
   "no issues found".
 - **127 or an authentication error** — use the missing/unauthenticated fallback
   below. These are environment failures, not bugs in this skill.
+- **0 with an `Unknown command` or missing-skill result** — the CLI did not load
+  the plugin. Treat it as a plugin-loading failure, not a clean review, and use
+  the pasted-method fallback below.
 - **any other non-zero** — report the status and finish your own pass.
 
 **Read the new code yourself while the external review runs** — you are the
@@ -121,10 +183,8 @@ was supposed to do.
 Keep the two passes independent: give the external reviewer the scoped prompt
 and repository state, never your suspected findings or interim conclusions.
 
-Whichever CLI you invoke, pass the scope and expectations in the prompt, not the
-name of this skill or any other workflow skill. If the other CLI is not
-installed or not authenticated, say so plainly and fall back to a task-local
-subagent given
+If the other CLI is not installed or not authenticated, say so plainly and fall
+back to a task-local subagent given
 [`../review/references/single-pass.md`](../review/references/single-pass.md). A
 same-model second opinion is weaker; report that you used one.
 
@@ -159,6 +219,15 @@ Summarize for the user (and for whatever plan/PR document tracks this work):
 every finding, accepted **and** vetoed, with one-line evidence for each verdict,
 and which model raised it. Record vetoes especially — the next session will
 rediscover the same "bug" and must not re-litigate it.
+
+Use this compact ledger, repeating the final review verdict in each row so the
+result remains legible when copied or aggregated:
+
+Begin with one top-level `Verdict: LAND | REVISE | DISCARD` line. If no findings
+survive, follow it with `No issues found.` and do not invent ledger rows.
+
+| Scope | Model | Finding | Severity | Accept/Veto | Evidence (one line) | Verdict |
+| --- | --- | --- | --- | --- | --- | --- |
 
 ## Adapting for your project
 

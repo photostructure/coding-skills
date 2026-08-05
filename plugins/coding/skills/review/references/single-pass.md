@@ -15,25 +15,29 @@ apply fixes.
 
 ## What to look for
 
-**Correctness**
+**Defects — always report**
 
 - Logic or implementation errors
-- Code that is correct but surprising — suggest a clearer equivalent or a comment
-- Don't trust docs or implementation as authoritative. If they disagree, flag it,
-  consider what you think is correct (it may be neither), and explain your
-  reasoning
+- Disagreement between documentation and code. Treat neither as automatically
+  authoritative; explain what is correct, which may be neither.
+- Divergence from the claimed intent. When the prompt supplies a proposed commit
+  message, the diff must deliver exactly what it claims, no more and no less.
+  Scope creep, missing halves, and misdescribed motivation are High findings
+  even when the code itself is correct.
 
-**Code quality**
+**Quality observations — report only at High or Medium impact**
 
 - Violations of the project's design principles or coding standards
+- Code that is correct but surprising
 - Dead code — suggest deleting it
 - Doc comments that have drifted from the implementation, or that merely restate
   the function name — suggest removing
-
-**Testing and documentation**
-
 - Missing coverage for critical paths or edge cases
 - Test fixtures that need updating
+
+An observation that would not change what the author ships is noise; leave it
+out. Do not report Low-severity findings or unlikely corner cases at all. A
+padded report buries the finding that matters.
 
 ## Verify every candidate
 
@@ -52,19 +56,33 @@ Do not report style preferences, speculative future risks, feature requests,
 issues outside changed lines, or diagnostics a compiler, typechecker, or linter
 already reports.
 
+Do not suggest a change that contradicts the project's stated policy in
+`AGENTS.md`, `CLAUDE.md`, or design documents read during scoping. Such a
+suggestion is a bug in the review, not in the code.
+
 Do not report an issue the code explicitly silences (`// eslint-disable`,
 `# noqa`, `@ts-expect-error`, and similar). The author already made that call
 deliberately. Report it only if you can prove the suppression itself is wrong.
 
 ## Return the report
 
+Begin with exactly one top-level verdict:
+
+`Verdict: LAND | REVISE | DISCARD`
+
+- **LAND** — the change is worth landing as written.
+- **REVISE** — the change is worth landing after the reported defects are fixed.
+- **DISCARD** — do not land the change at all because its premise is wrong, it is
+  unnecessary, or the problem is already handled elsewhere. This is an expected
+  review outcome, not a failure of the review.
+
 Sort findings by severity. For each finding include:
 
-- **Priority:** Critical, High, Medium, or Low
+- **Priority:** Critical, High, or Medium
 - **Problem:** what fails and the concrete triggering scenario
 - **Proof:** the traced path, test, or ground-truth comparison
 - **Solution:** a focused correction
 - **Location:** `file:line`
 
 Require proof for every finding. If nothing survives verification, return
-`No issues found.` Do not pad the report.
+`No issues found.` after the verdict. Do not pad the report.

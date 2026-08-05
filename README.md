@@ -218,11 +218,12 @@ context. Review skills keep a leaf-mode guard so an implicit skill match cannot
 restart orchestration. Setup-only plugins do not invent reviewer agents.
 
 `second-opinion` is the deliberate exception to the host-neutral rule: its whole
-job is to shell out to the *other* vendor's CLI (`codex exec review` from Claude
-Code, `claude -p` from Codex), so it names both hosts. The validator exempts
-that one file from the host-naming checks and applies every other portability
-rule to it. It falls back to a same-model reviewer, and says so, when the other
-CLI is missing or unauthenticated.
+job is to shell out to the *other* vendor's CLI (plain `codex exec` with a
+`$coding:review` prompt from Claude Code, `claude -p` with a `/coding:review`
+prompt from Codex), so it names both hosts. The validator allows those exact
+review invocations in that one file and applies every other portability rule to
+it. It falls back to a same-model reviewer, and says so, when the other CLI is
+missing or unauthenticated.
 
 ## Adapting the workflows
 

@@ -377,23 +377,38 @@ def validate_portability_tokens(validation: Validation) -> None:
         ),
     }
     # The second-opinion gate is the one skill whose purpose is to invoke the
-    # *other* vendor's CLI, so it must name both hosts. Every other portability
-    # rule still applies to it.
-    host_naming_rules = {
+    # other vendor's CLI and its installed review skill, so it must use both
+    # hosts' invocation syntax. Every other portability rule still applies.
+    second_opinion_rules = {
         "Claude model class",
         "Claude wrapper",
         "Codex-only runtime wording",
     }
-    host_naming_exempt = {Path("plugins/coding/skills/second-opinion/SKILL.md")}
+    second_opinion_invocations = {
+        "Claude slash skill": ("/coding:review-staged", "/coding:review"),
+        "Codex-only bundled skill invocation": (
+            "$coding:review-staged",
+            "$coding:review",
+        ),
+    }
+    second_opinion_exempt = {Path("plugins/coding/skills/second-opinion/SKILL.md")}
 
     for path in operational:
         relative = path.relative_to(ROOT)
-        exempt = relative in host_naming_exempt
+        exempt = relative in second_opinion_exempt
         content = path.read_text(encoding="utf-8")
         for label, pattern in forbidden.items():
-            if exempt and label in host_naming_rules:
+            if exempt and label in second_opinion_rules:
                 continue
-            if pattern.search(content):
+            checked_content = content
+            if exempt and label in second_opinion_invocations:
+                for invocation in second_opinion_invocations[label]:
+                    checked_content = re.sub(
+                        re.escape(invocation) + r"(?![a-z-])",
+                        "",
+                        checked_content,
+                    )
+            if pattern.search(checked_content):
                 validation.errors.append(f"{relative}: contains {label}")
 
         if exempt:
@@ -405,8 +420,41 @@ def validate_portability_tokens(validation: Validation) -> None:
                 continue
             validation.errors.append(f"{relative}:{number}: unexpected Claude runtime reference")
 
+    second_opinion_relative = "plugins/coding/skills/second-opinion/SKILL.md"
+    second_opinion_content = (ROOT / second_opinion_relative).read_text(
+        encoding="utf-8"
+    )
+    for invocation in (
+        "/coding:review-staged",
+        "/coding:review",
+        "$coding:review-staged",
+        "$coding:review",
+    ):
+        validation.check(
+            re.search(
+                re.escape(invocation) + r"(?![a-z-])",
+                second_opinion_content,
+            )
+            is not None,
+            f"{second_opinion_relative}: missing required invocation {invocation!r}",
+        )
+    for token in (
+        '--prompt-file "<prompt-file>"',
+        "  codex exec \\",
+        '  claude -p "{prompt}" \\',
+    ):
+        validation.check(
+            token in second_opinion_content,
+            f"{second_opinion_relative}: missing required invocation token {token!r}",
+        )
+    validation.check(
+        re.search(r"(?m)^\s*codex exec review(?:\s|\\)", second_opinion_content)
+        is None,
+        f"{second_opinion_relative}: invokes the built-in codex review subcommand",
+    )
+
     for relative in (
-        "plugins/coding/skills/second-opinion/SKILL.md",
+        second_opinion_relative,
         "plugins/coding/skills/stage/SKILL.md",
     ):
         content = (ROOT / relative).read_text(encoding="utf-8")
