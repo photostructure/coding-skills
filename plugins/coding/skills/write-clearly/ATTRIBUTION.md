@@ -14,6 +14,11 @@ This skill synthesizes and paraphrases ideas from:
   [Plain Language Guide Series](https://digital.gov/guides/plain-language):
   audience-first wording, organization, strong verbs, scannable design, and
   reader testing.
+- Dr. Taylor Jones, [Language Jones](https://www.youtube.com/@languagejones)
+  (YouTube video on spotting LLM writing, 2025): the literal-image test for
+  figurative language — fluent wording over an incoherent image marks
+  machine generation — and restraint with clustered signature rhetorical
+  devices.
 - UK Government Digital Service,
   ["Use clear language"](https://guidance.publishing.service.gov.uk/writing-to-gov-uk-standards/writing-guidelines/clear-language/)
   and

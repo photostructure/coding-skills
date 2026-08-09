@@ -1,6 +1,6 @@
 ---
 name: write-clearly
-description: Draft and revise prose for clarity, precision, concision, unambiguous execution, and honest emphasis using Orwell's rules, classic composition principles, modern plain-language guidance, and a specialized standard for agent instructions. Use for documentation, explanations, reports, emails, UI copy, agent instructions, plans, reviews, specifications, handoffs, or any request to simplify, tighten, clarify, humanize, remove jargon, or reduce ambiguous wording while preserving meaning and voice.
+description: Draft and revise prose for clarity, precision, concision, unambiguous execution, and honest emphasis using Orwell's rules, classic composition principles, modern plain-language guidance, and a specialized standard for agent instructions. Use for documentation, explanations, reports, emails, UI copy, agent instructions, plans, reviews, specifications, handoffs, or any request to simplify, tighten, clarify, humanize, remove jargon, make text sound less machine-generated, or reduce ambiguous wording while preserving meaning and voice.
 ---
 
 # Write Clearly
@@ -17,6 +17,11 @@ facts, uncertainty, necessary detail, and the author's recognizable voice.
    only when they make real sequences or comparisons easier to scan.
 3. Apply Orwell's tests:
    - Replace stale or mixed figures of speech with fresh wording or literal fact.
+     Test each surviving figure by its literal image: if the picture cannot be
+     drawn ("overarching pillars that undergird", "point a toolkit at a
+     problem"), the words were paired by habit or co-occurrence, not meaning.
+     Fluent phrasing over an incoherent image is the strongest marker of
+     machine-generated prose.
    - Prefer the shortest familiar word that is equally exact.
    - Cut every word that adds no meaning, tone, or useful rhythm.
    - Prefer active voice when it makes the actor and responsibility clearer.
@@ -32,6 +37,11 @@ facts, uncertainty, necessary detail, and the author's recognizable voice.
      parallel form.
    - Give each sentence one main thought, but vary sentence and paragraph length
      enough to avoid a mechanical rhythm.
+   - Ration signature rhetorical devices: "not X but Y" contrasts, groupings of
+     three, staccato sentence fragments, self-validating asides ("and that
+     matters"), and pet intensifiers such as honestly, actually, and delve.
+     Each is legitimate rhetoric on its own; clustered, they read as
+     machine-generated boilerplate.
    - Remove euphemism and abstraction that hide what happened or who is
      responsible.
    - Never gain brevity by changing scope, certainty, causality, intent, or
