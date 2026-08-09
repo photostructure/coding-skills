@@ -280,8 +280,9 @@ what dynamic evidence, a reproducer, or a complete source-level lifetime trace d
 | **Lead** | A static-analyzer diagnostic or an incomplete/conditional lifetime trace whose guards, callers, ownership, or reachability remain unresolved | List under **"Needs verification"** as a question — not a finding |
 | **Theoretical** | A pattern match or best-practice gap (missing `-fstack-protector`, no UBSan in CI, an over-broad suppression, no `_FORTIFY_SOURCE`) with **no observed defect** | **Drop** it from a defect review. Configuration/hardening posture belongs to the `project-setup` skill |
 
-Signal over noise: better to omit a theoretical nit than to bury one proven
-use-after-free in ten "consider adding" remarks. And note what is **not** evidence —
+Signal over noise: chase every lead, then report only what reaches Proven. One proven
+use-after-free buried in ten "consider adding" remarks helps nobody, but so does a
+lead you never followed. And note what is **not** evidence —
 reviewer confidence and eloquence are not proof, and **neither is a second tool
 agreeing with you**: two analyzers converge on the same infeasible path all the time.
 A stack trace is preferred evidence. Without one or a reproducer, the source trace must be

@@ -1,6 +1,6 @@
 {
   "name": "security",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "Proof-gated vulnerability review and applicability-aware security hardening for JavaScript and TypeScript web and Electron desktop applications.",
   "author": {
     "name": "Matthew McEachen",

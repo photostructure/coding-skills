@@ -5,10 +5,6 @@ description: Top-level, user-facing code-review workflow for verified issues in 
 
 # Code Review
 
-> Documented in depth: [Most AI code reviews are noise. Here's how to fix that.](https://photostructure.com/coding/claude-code-review/)
-
-Review the mentioned code for potential issues and improvements.
-
 ## Leaf-mode guard
 
 If the task identifies your role as `leaf-reviewer` or sets
@@ -18,23 +14,18 @@ yourself, return the report to the caller, and stop.
 
 ## Run the review
 
-Read both references and follow them:
-
-- [`references/single-pass.md`](./references/single-pass.md) — the review method:
-  scope, what to look for, verification discipline, exclusions, and the fields
-  every finding must carry, plus the required LAND, REVISE, or DISCARD verdict.
-- [`references/orchestration.md`](./references/orchestration.md) — the top-level
-  rules: what to study first, the two-leaf delegation bound, and how to present
-  findings for the user to adjudicate.
+Read and follow [`references/single-pass.md`](./references/single-pass.md), then
+[`references/orchestration.md`](./references/orchestration.md). The latter's
+user-facing response rules replace the former's leaf return behavior.
 
 ## Adapting for your project
 
-- Replace "the project's coding standards and design principles" in
-  `references/orchestration.md` with explicit paths (`AGENTS.md`, optional
-  `CLAUDE.md`, `docs/DESIGN-PRINCIPLES.md`).
-- Add project-specific "what to look for" items to `references/single-pass.md`
-  (e.g. "new public APIs have rate limiting", "DB queries use parameterized
-  inputs", "error messages don't leak internal paths").
-- Tune the exclusion list in `references/single-pass.md` if your team *does* want
-  style or refactor feedback. The default is strict because noise is the bigger
-  problem.
+- **Name your standards explicitly** in
+  [`references/single-pass.md`](./references/single-pass.md) — `AGENTS.md`,
+  optional `CLAUDE.md`, `docs/DESIGN-PRINCIPLES.md` — in place of the generic
+  "relevant design documents".
+- **Add project-specific "what to look for" items** to the same file, e.g. "new
+  public APIs have rate limiting", "DB queries use parameterized inputs", "error
+  messages don't leak internal paths".
+- **Tune the exclusion list** there if your team *does* want style or refactor
+  feedback. The default is strict because noise is the bigger problem.

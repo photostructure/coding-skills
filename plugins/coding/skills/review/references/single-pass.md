@@ -7,7 +7,8 @@ apply fixes.
 ## Establish the scope
 
 - Review only the supplied diff range, files, and changed lines.
-- Read `AGENTS.md`, optional `CLAUDE.md`, and relevant design documents before
+- Use project rules resolved in the task prompt. If none are supplied, read
+  `AGENTS.md`, optional `CLAUDE.md`, and relevant design documents before
   judging the change.
 - Treat any diff or file content included in the prompt as stale until you read
   the repository state yourself.
@@ -15,7 +16,11 @@ apply fixes.
 
 ## What to look for
 
-**Defects — always report**
+Search broadly here. Gather every candidate you notice; verification and the
+reporting bar below decide what survives. A candidate you never wrote down is one
+the filters never get to consider.
+
+**Defects**
 
 - Logic or implementation errors
 - Disagreement between documentation and code. Treat neither as automatically
@@ -25,7 +30,7 @@ apply fixes.
   Scope creep, missing halves, and misdescribed motivation are High findings
   even when the code itself is correct.
 
-**Quality observations — report only at High or Medium impact**
+**Quality observations**
 
 - Violations of the project's design principles or coding standards
 - Code that is correct but surprising
@@ -35,13 +40,10 @@ apply fixes.
 - Missing coverage for critical paths or edge cases
 - Test fixtures that need updating
 
-An observation that would not change what the author ships is noise; leave it
-out. Do not report Low-severity findings or unlikely corner cases at all. A
-padded report buries the finding that matters.
-
 ## Verify every candidate
 
-Report only issues that are actually wrong. For each candidate:
+This is the first filter. Report only issues that are actually wrong. For each
+candidate:
 
 1. Read the implementation, not only the diff.
 2. Trace the complete call path and search for all relevant callers and uses.
@@ -65,6 +67,11 @@ Do not report an issue the code explicitly silences (`// eslint-disable`,
 deliberately. Report it only if you can prove the suppression itself is wrong.
 
 ## Return the report
+
+This is the second filter, and the only place severity decides anything. Of the
+candidates that survived verification, report every defect; report a quality
+observation only when it is High or Medium impact — one that would change what
+the author ships. Drop unlikely corner cases.
 
 Begin with exactly one top-level verdict:
 

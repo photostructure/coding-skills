@@ -1,6 +1,6 @@
 {
   "name": "security",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "Complementary JavaScript/TypeScript web and Electron security skills for Claude Code. web-security-review traces data flow and reports only proven vulnerabilities. web-security-hardening assesses applicable OWASP ASVS 5.0.0 and Electron Security Checklist controls using evidence-backed Met/Gap/Not applicable/Needs verification states.",
   "author": {
     "name": "Matthew McEachen",

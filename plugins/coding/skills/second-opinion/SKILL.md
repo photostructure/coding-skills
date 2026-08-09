@@ -5,8 +5,6 @@ description: Get a second opinion on freshly written code from the *other* codin
 
 # Second Opinion
 
-> Documented in depth: [Most AI code reviews are noise. Here's how to fix that.](https://photostructure.com/coding/claude-code-review/)
-
 Two reviews, from two different models, then evidence decides. You review the
 code yourself — you know what the change was supposed to do. A *different* model
 reviews it independently, with no access to your reasoning. Then every finding

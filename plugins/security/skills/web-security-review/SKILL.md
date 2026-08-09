@@ -55,7 +55,8 @@ Use one of these proof shapes:
   resulting impact.
 
 Every shape must establish attacker capability, affected boundary, and impact. Signal
-over noise: better to miss a theoretical issue than to flood the report.
+over noise: run down every lead you notice, then report only the ones whose proof is
+complete. The gate is proof, not how many candidates you started with.
 
 Do **not** assign confidence percentages or 1–10 scores — reviewer confidence is not
 evidence, and neither is a second tool agreeing with you. The complete proof is the
