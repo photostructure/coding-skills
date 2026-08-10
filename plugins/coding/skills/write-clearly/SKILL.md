@@ -5,8 +5,10 @@ description: Draft and revise prose for clarity, precision, concision, unambiguo
 
 # Write Clearly
 
-Make the intended meaning easy for the intended reader to grasp. Preserve
-facts, uncertainty, necessary detail, and the author's recognizable voice.
+Make the intended meaning easy for the intended reader to grasp. Less is more:
+precise, concise wording respects the reader's time and attention, and every
+needless word spends both. Preserve facts, uncertainty, necessary detail, and
+the author's recognizable voice.
 
 ## Workflow
 

@@ -128,6 +128,9 @@ applies.
   judging sentence length.
 - Give each paragraph one topic. Start with the point, then add evidence or
   explanation.
+- Cut words that do not change execution: *please note that*, *it is important
+  to*, *be sure to*, *in order to*, restated context the reader already has.
+  Spend words on scope, conditions, and evidence, not emphasis.
 - Split dense conditions, actions, alternatives, or acceptance criteria into a
   vertical list.
 - Keep required conditions, actions, and acceptance criteria out of
