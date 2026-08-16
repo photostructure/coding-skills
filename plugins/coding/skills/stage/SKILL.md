@@ -172,11 +172,48 @@ the user explicitly approves that exact staged scope and message.** After
 approval, pass the message to `git commit` using the host's normal non-
 interactive argument or message-file mechanism; do not use shell substitution.
 
+After verifying the staged diff contains exactly the intended commit, use plain
+`git commit`. Do not use `git commit --only -- <paths>` after partial staging:
+`--only` commits the named paths' working-tree content instead of their staged
+content, so filtered-out hunks return under a message that does not describe
+them.
+
+`--only` is still right for what it was meant for: committing one whole file's
+working-tree content without disturbing a shared index you never filtered. It
+is wrong the moment you have partial-staged anything.
+
+Confirm what you are about to commit, not what you staged some minutes ago:
+
+```bash
+git diff --cached --stat        # scope
+git log -1 --format='%h %s'     # still your commit at the tip?
+```
+
+The second matters before any `--amend`: if another session committed while you
+were composing, `--amend` rewrites *their* commit. Then the fix is a follow-up
+commit or a revert, never an amend.
+
 ## STOP — Red Flags
 
 - About to `git add .` or `git add -A` or `git add --all` — **STOP**
 - About to `git add <file>` on a file with mixed changes — **STOP**, partial-stage
 - Staged diff has lines you cannot trace to this work — **STOP** and preserve
   the user's existing index state
+- About to `git commit --only` after partial-staging — **STOP**, it commits the
+  working tree and discards everything you staged
+- About to `git commit --amend` — **STOP** and check `git log -1` first; if the
+  tip is no longer your commit you would rewrite someone else's
 - Commit message exceeds 10 lines — **STOP**, split into multiple commits
 - About to commit without user approval — **STOP**
+
+## Scratch files
+
+Any copy this workflow makes — of the repo, of a build-output directory, of a
+file you replay edits onto — belongs in the operating system's temporary
+directory, in a fresh directory named for the project and the purpose. Never
+inside the checkout, and never under a home directory.
+
+Delete it before you finish. A repo or build-output copy runs to gigabytes,
+nothing reaps a home directory, and the out-of-disk failure that eventually
+follows surfaces somewhere unrelated — a test suite that hangs, a build that
+dies mid-link — costing far more to diagnose than the copy ever saved.
