@@ -25,10 +25,10 @@ revalidate candidates. The parent owns final verification. Use no more than two
 leaf tasks and one delegation round, partitioned along the file list from the
 stat so no two leaves overlap.
 
-Resolve common context once: the exact scope, claimed intent, applicable project
-rules, and scrutiny focus. Pass that concise context and the relevant source
-paths to each leaf; do not make leaves repeat this discovery or pass them the
-full conversation.
+Resolve common context once: the exact scope, substantive intent, commit
+metadata if supplied, applicable project rules, and scrutiny focus. Pass that
+concise context and the relevant source paths to each leaf; do not make leaves
+repeat this discovery or pass them the full conversation.
 
 If the current host exposes the tool-restricted `coding:reviewer` agent, use it.
 Otherwise use a general task-local subagent. Start every leaf prompt with

@@ -25,10 +25,8 @@ the filters never get to consider.
 - Logic or implementation errors
 - Disagreement between documentation and code. Treat neither as automatically
   authoritative; explain what is correct, which may be neither.
-- Divergence from the claimed intent. When the prompt supplies a proposed commit
-  message, the diff must deliver exactly what it claims, no more and no less.
-  Scope creep, missing halves, and misdescribed motivation are High findings
-  even when the code itself is correct.
+- Divergence from requirements, accepted plans, or the task's substantive
+  intent. A proposed commit message is metadata, not a requirement.
 
 **Quality observations**
 
@@ -39,6 +37,23 @@ the filters never get to consider.
   the function name — suggest removing
 - Missing coverage for critical paths or edge cases
 - Test fixtures that need updating
+
+## Separate content from commit mechanics
+
+Review the content that would land. Report a defect when that content produces
+a broken tree, omits behavior required by a source other than the commit
+message, or otherwise fails the reporting bar below.
+
+Do not report commit mechanics as findings. Commit mechanics include the commit
+message's wording or Conventional Commit fields and the choice to include,
+combine, split, or order otherwise-valid files or hunks. Never assign these
+concerns a priority, and never let them change the verdict. If commit mechanics
+are the only concerns, return `Verdict: LAND` and `No issues found.`
+
+Treat a proposed commit message as a fallible summary that can help explain the
+change. A mismatch between the message and the diff is a content finding only
+when the diff also violates an independent requirement. Otherwise, handle it as
+a commit note in the report format below.
 
 ## Verify every candidate
 
@@ -77,7 +92,8 @@ Begin with exactly one top-level verdict:
 
 `Verdict: LAND | REVISE | DISCARD`
 
-- **LAND** — the change is worth landing as written.
+- **LAND** — the content is worth landing. Commit notes may still recommend
+  different packaging.
 - **REVISE** — the change is worth landing after the reported defects are fixed.
 - **DISCARD** — do not land the change at all because its premise is wrong, it is
   unnecessary, or the problem is already handled elsewhere. This is an expected
@@ -93,3 +109,10 @@ Sort findings by severity. For each finding include:
 
 Require proof for every finding. If nothing survives verification, return
 `No issues found.` after the verdict. Do not pad the report.
+
+After all findings, add a brief `Commit notes` section only when the commit
+message or grouping warrants a change. Each note must state the recommendation
+and the specific reason it would improve the history. For a message change,
+give the complete proposed message. For a split, identify each independently
+committable batch and give its complete proposed message. Do not put commit
+notes in the findings list or assign them a priority or severity.

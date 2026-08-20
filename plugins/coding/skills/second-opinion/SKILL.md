@@ -35,10 +35,11 @@ Before launching anything, write down:
 
 - **The diff range** — commit range, staged diff, or working-tree diff, plus the
   file list. Both reviews get exactly the same scope.
-- **The claimed intent** — the proposed Conventional Commit message for the
-  change. Draft one first if it does not exist; without it, the reviewer cannot
-  ask whether the diff delivers exactly what the message claims, no more and no
-  less.
+- **The substantive intent** — the task, accepted plan, specification excerpt, or
+  change description that states what the content must do. Include a proposed
+  Conventional Commit message when one exists, but label it as commit metadata,
+  not a requirement. Do not draft a message merely to create a correctness
+  boundary for the review.
 - **Pasted context** — plan or TPP excerpts, settled decisions the reviewer must
   not re-litigate, and the project's own review exclusions. Paste their text
   into the prompt. A spawned CLI cannot chase references or basenames; anything
@@ -144,8 +145,11 @@ Construct the prompt file with all of the following:
   shared single-pass method and returns one report without delegating, asking
   for adjudication, or entering a commit flow
 - the diff scope, named in the prompt rather than only through CLI flags
-- the proposed commit message verbatim as the claimed intent, with the
-  instruction that any diff-versus-message mismatch is a High finding
+- the substantive intent verbatim, with its source identified as the task,
+  accepted plan, specification, or change description
+- the proposed commit message verbatim as commit metadata, when one exists,
+  with the instruction that message or grouping concerns belong only in a
+  post-findings `Commit notes` section and cannot affect the verdict
 - the pasted context and scrutiny list verbatim
 - the ground truth and the exact command or procedure for querying it
 
@@ -190,6 +194,12 @@ same-model second opinion is weaker; report that you used one.
 
 ## 3. Vet every finding — accept and veto only with proof
 
+First reclassify any concern that is only about the commit message or the
+grouping, splitting, or ordering of otherwise-valid content. It is a commit
+note, not a finding: do not accept or veto it, assign it a severity, or require a
+pinning test. If these are the only concerns from both reviews, the verdict is
+`LAND`.
+
 For each finding from the external review and from your own read:
 
 1. Construct the empirical test: run ground truth and the new code on the same
@@ -226,18 +236,26 @@ new tests.
 ## 5. Report the verdicts
 
 Summarize for the user (and for whatever plan/PR document tracks this work):
-every finding, accepted **and** vetoed, with one-line evidence for each verdict,
-and which model raised it. Record vetoes especially — the next session will
-rediscover the same "bug" and must not re-litigate it.
+every substantive finding, accepted **and** vetoed, with one-line evidence for
+each verdict, and which model raised it. Record vetoes especially — the next
+session will rediscover the same "bug" and must not re-litigate it.
 
 Use this compact ledger, repeating the final review verdict in each row so the
 result remains legible when copied or aggregated:
 
 Begin with one top-level `Verdict: LAND | REVISE | DISCARD` line. If no findings
-survive, follow it with `No issues found.` and do not invent ledger rows.
+survive, use `LAND`, follow it with `No issues found.`, and do not invent ledger
+rows.
 
 | Scope | Model | Finding | Severity | Accept/Veto | Evidence (one line) | Verdict |
 | --- | --- | --- | --- | --- | --- | --- |
+
+After the ledger—or after `No issues found.` when there are no rows—add a brief
+`Commit notes` section when either model proposed a warranted message or
+grouping improvement. Name the model, state the specific reason, and give the
+complete improved message. For a split, identify every independently
+committable batch and give each batch's complete message. Keep these notes
+outside the ledger; they have no severity and cannot change the verdict.
 
 ## Scratch files
 

@@ -7,7 +7,8 @@ description: Top-level, user-facing workflow to review the staged Git diff for v
 
 Review the **staged** diff (`git diff --cached`) for potential issues and
 improvements, then prepare the commit. When the user supplies a proposed commit
-message, treat it as the claimed intent and review the diff against it.
+message, use it as context for the intended change, not as a correctness
+requirement.
 
 ## Leaf-mode guard
 
@@ -19,17 +20,23 @@ the commit flow below.
 
 ## Run the review
 
-Size the scope before reading it: `git diff --cached --stat`. Recommend a split —
-before the review, not after — when the staged diff does not tell one coherent
-story. Size alone is not a reason to split: staging is already an act of
-selection, and a large change that tells one story rarely decomposes into
-independently committable pieces after the fact.
+Size the scope before reading it: `git diff --cached --stat`. Review all staged
+content as supplied. The size or coherence of a proposed commit does not affect
+the review verdict.
 
 With the staged diff as the scope, read and follow
 [`../review/references/single-pass.md`](../review/references/single-pass.md), then
 [`../review/references/orchestration.md`](../review/references/orchestration.md).
 The latter's user-facing response rules replace the former's leaf return
 behavior.
+
+After the findings, use the shared `Commit notes` section for optional message
+or grouping advice. If a split would improve reviewability or make later reverts
+safer, identify the files or hunks in each independently committable batch and
+give a complete Conventional Commit message for every batch. State the specific
+reason for the split; size alone is not enough. These notes never receive a
+priority and never change the verdict. If they are the only concerns, return
+`Verdict: LAND` and `No issues found.`
 
 ## Post-review commit flow
 
@@ -39,9 +46,10 @@ not prepare a commit message for a change the review recommends abandoning.
 Otherwise, do not commit during the review:
 
 1. List the files (and line ranges, if partial) that are staged for commit.
-2. Confirm or refine the supplied Conventional Commit message, or draft one when
-   none was supplied. Emphasize motivation or consequence rather than restating
-   the diff. Ask the user to review or edit it.
+2. Present the recommended commit message, or the batches and messages from the
+   `Commit notes` section. When no note was warranted, confirm the supplied
+   message or draft one. Emphasize motivation or consequence rather than
+   restating the diff. Ask the user to review or edit the proposal.
 3. Only commit after explicit user approval.
 
 ## Scratch files
