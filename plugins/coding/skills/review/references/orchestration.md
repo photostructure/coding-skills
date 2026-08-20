@@ -40,9 +40,25 @@ continue locally.
 ## Response format
 
 Use the verdict, severity order, and finding fields from
-[`single-pass.md`](./single-pass.md). Give each finding a short ID (`#A`, `#B`).
-After the complete report, ask the user whether to accept, veto, or comment on
-each finding; IDs do not replace the written findings.
+[`single-pass.md`](./single-pass.md). Each reviewer agent session uses one
+namespace as its stable handle, so the user can direct feedback to the agent
+that reported a finding. Reuse the namespace this session chose earlier. If it
+has none, run once:
+
+```bash
+python3 "<review-skill>/scripts/new_review_namespace.py"
+```
+
+Use the script's sole stdout line unchanged for every review and follow-up in
+that session. The script selects an adjective and animal of 3–6 lowercase ASCII
+letters using the operating system's secure random source, such as `sly-fox` or
+`shy-bird`.
+
+Give findings IDs in the form `#<adjective>-<animal>-A`, then `-B`, `-C`, and so
+on (for example, `#sly-fox-A`). IDs must match
+`^#[a-z]{3,6}-[a-z]{3,6}-[A-Z]+$`; never use bare IDs such as `#A`. After the
+complete report, ask the user whether to accept, veto, or comment on each
+finding; IDs do not replace the written findings.
 
 A review request is read-only. Do not implement fixes merely because you found
 an issue; apply a fix and run its validation only after the user explicitly
