@@ -1,6 +1,8 @@
 ---
 name: review
 description: Top-level, user-facing code-review workflow for verified issues in specific files, functions, diffs, or code sections. Use when the user directly requests a review and may need to adjudicate its findings. Do not use as an orchestrator for a delegated leaf review or finding-validation task.
+metadata:
+  website: "https://photostructure.com/coding/claude-code-review/"
 ---
 
 # Code Review

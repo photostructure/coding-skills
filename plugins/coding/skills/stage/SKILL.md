@@ -1,6 +1,8 @@
 ---
 name: stage
 description: Use when committing work from the current session to stage ONLY hunks the session touched, not the entire file. Prevents accidentally staging unrelated uncommitted changes from other work.
+metadata:
+  website: "https://photostructure.com/coding/clean-commits/#stage"
 ---
 
 # Stage Session Changes

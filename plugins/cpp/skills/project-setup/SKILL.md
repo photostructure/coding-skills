@@ -1,6 +1,8 @@
 ---
 name: project-setup
 description: Setup and hardening review for cross-platform modern-C++ (C++17) native projects, especially Node.js addons built with node-gyp / node-addon-api. Use when asked to "set up a native addon", "harden a C/C++ build", "review my binding.gyp", "add compiler hardening flags", "wire up AddressSanitizer/UBSan/TSan/clang-tidy", "set up cross-platform CI / prebuilds for a native module", or "make this native code maintainable". Produces an applicability-aware baseline gap analysis (Met / Gap / Not applicable / Needs verification) across build config, per-OS/per-arch compiler hardening, sanitizer & static-analysis wiring, CI/prebuilds/supply-chain, and modern-C++ conventions — not exploit findings.
+metadata:
+  website: "https://photostructure.com/coding/"
 ---
 
 # Native C/C++ Project Setup & Hardening

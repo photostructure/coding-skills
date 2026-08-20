@@ -1,6 +1,8 @@
 ---
 name: web-security-review
 description: Top-level security code review for JavaScript/TypeScript web applications and Electron desktop applications. Use when the user asks to "security review", "find vulnerabilities", "check for security issues", "audit security", "OWASP review", "is this secure?", or to review Node/Express/React/Vue/Next/Nest/Angular/Electron code for database/storage security, XSS, authentication, authorization (IDOR/BOLA), SSRF, CSRF, deserialization, secrets, crypto, renderer/preload/main-process boundaries, contextBridge/IPC, BrowserWindow/WebContents, navigation, custom protocols, deep links, shell integration, permissions, or updater/package integrity. Traces data flow and reports only findings with concrete data-flow, exposure, or configuration proof. Do not restart the full workflow for a delegated leaf validation task.
+metadata:
+  website: "https://photostructure.com/coding/"
 ---
 
 # Web and Electron Security Review (JavaScript / TypeScript)

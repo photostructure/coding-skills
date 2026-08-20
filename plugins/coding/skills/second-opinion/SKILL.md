@@ -1,6 +1,8 @@
 ---
 name: second-opinion
 description: Get a second opinion on freshly written code from the *other* coding agent — Claude asks Codex, Codex asks Claude — then empirically vet every finding against ground truth before accepting or vetoing it. Use once the code is written and the tests pass, before you commit. Do not use for a delegated review or finding-validation pass.
+metadata:
+  website: "https://photostructure.com/coding/claude-code-review/#second-opinion"
 ---
 
 # Second Opinion

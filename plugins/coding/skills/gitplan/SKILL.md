@@ -1,6 +1,8 @@
 ---
 name: gitplan
 description: Plan and execute coherent Conventional Commit groupings for tangled working tree changes — multiple intertwined logical edits that need to be split into separate, reviewable commits.
+metadata:
+  website: "https://photostructure.com/coding/clean-commits/#gitplan"
 ---
 
 **Applicability is about how tangled the changes are, not how many files they touch.** Invoke this skill when the working tree mixes multiple intertwined logical changes that need untangling into separate commits — even if that's only a handful of files. Skip it when the changes are trivial or superficial, no matter how many files they touch: formatter runs, lint autofixes, typo/grammar fixes, or edits that obviously belong in a single commit.

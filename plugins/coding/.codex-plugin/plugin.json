@@ -1,6 +1,6 @@
 {
   "name": "coding",
-  "version": "2.4.1",
+  "version": "2.4.2",
   "description": "Disciplined planning, proof-based code review, focused Git staging, Technical Project Plans, and unambiguous technical writing for coding agents.",
   "author": {
     "name": "Matthew McEachen",
@@ -26,6 +26,7 @@
     "longDescription": "Reusable workflows for iterative planning, evidence-backed review, precise Git staging, multi-session Technical Project Plans, and unambiguous technical prose.",
     "developerName": "PhotoStructure",
     "category": "Developer Tools",
+    "websiteURL": "https://photostructure.com/coding/",
     "capabilities": [
       "Read",
       "Write"

@@ -1,6 +1,6 @@
 {
   "name": "rust",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Idiomatic safe Rust project setup, strict linting, maintainability, CI, packaging, and publishing guidance.",
   "author": {
     "name": "Matthew McEachen",
@@ -28,6 +28,7 @@
     "longDescription": "An applicability-aware workflow for idiomatic safe Rust project setup, workspace policy, strict usable linting, testing, CI, unsafe boundaries, maintainability, packaging, and release preparation.",
     "developerName": "PhotoStructure",
     "category": "Developer Tools",
+    "websiteURL": "https://photostructure.com/coding/",
     "capabilities": [
       "Read",
       "Write"

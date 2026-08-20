@@ -1,6 +1,8 @@
 ---
 name: web-security-hardening
 description: Security best-practices and hardening review for JavaScript/TypeScript web and Electron desktop applications. Use when asked to harden an app, review security posture or secure defaults, assess OWASP ASVS or Electron security-checklist alignment, improve HTTP headers or CSP, review forms/input validation/sanitization/uploads, strengthen authentication/passwords/sessions/secrets, secure Electron windows/preloads/IPC/navigation/permissions/protocols/updates/packaging, or evaluate deployment/operations controls. Produces an applicability-aware baseline gap analysis (Met / Gap / Not applicable / Needs verification), not exploit severity findings.
+metadata:
+  website: "https://photostructure.com/coding/"
 ---
 
 # Web and Electron Security Hardening

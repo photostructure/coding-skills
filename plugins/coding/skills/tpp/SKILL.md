@@ -1,6 +1,8 @@
 ---
 name: tpp
 description: Work on a Technical Project Plan — read the plan, identify the current phase, do that phase's work, and update the plan with discoveries. Use when starting or resuming multi-session work tracked in a plan file.
+metadata:
+  website: "https://photostructure.com/coding/claude-code-tpp/"
 ---
 
 # Work on TPP

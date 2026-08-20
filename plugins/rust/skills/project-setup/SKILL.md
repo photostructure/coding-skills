@@ -1,6 +1,8 @@
 ---
 name: project-setup
 description: Set up, assess, or improve stable Rust projects for idiomatic safe code, maintainability, strict but usable rustc/Clippy/rustfmt policy, Cargo workspace and feature design, MSRV/edition/toolchain management, testing and CI, unsafe/FFI boundaries, documentation, crates.io packaging, and release hygiene. Use when asked to create or review a Rust project or Cargo.toml, make a Rust codebase easier to maintain, configure strict lints, reduce or govern unsafe code, add Miri/fuzz/sanitizer checks, structure a workspace, prepare or dry-run a crate publish, or establish Rust release and dependency policy. In assessment mode, produces an applicability-aware Met / Gap / Not applicable / Needs verification baseline rather than claiming bugs or unsoundness.
+metadata:
+  website: "https://photostructure.com/coding/"
 ---
 
 # Rust Project Setup

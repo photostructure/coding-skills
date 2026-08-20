@@ -1,6 +1,8 @@
 ---
 name: review-staged
 description: Top-level, user-facing workflow to review the staged Git diff for verified bugs and then prepare a clean Conventional Commit. Use when the user directly asks to review staged changes or prepare their commit. Do not use for a delegated leaf review or finding-validation task.
+metadata:
+  website: "https://photostructure.com/coding/claude-code-review/#review-staged"
 ---
 
 # Review Git Staged Changes

@@ -1,6 +1,6 @@
 {
   "name": "security",
-  "version": "1.2.1",
+  "version": "1.2.2",
   "description": "Proof-gated vulnerability review and applicability-aware security hardening for JavaScript and TypeScript web and Electron desktop applications.",
   "author": {
     "name": "Matthew McEachen",
@@ -29,6 +29,7 @@
     "longDescription": "Two complementary workflows for proven JavaScript, TypeScript, and Electron vulnerabilities and applicability-aware OWASP ASVS- and Electron-guided preventive-control assessments.",
     "developerName": "PhotoStructure",
     "category": "Security",
+    "websiteURL": "https://photostructure.com/coding/",
     "capabilities": [
       "Read"
     ],

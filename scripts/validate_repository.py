@@ -13,6 +13,24 @@ from urllib.parse import unquote, urlparse
 ROOT = Path(__file__).resolve().parents[1]
 EXPECTED_PLUGINS = {"coding", "security", "cpp", "rust"}
 EXPECTED_REPOSITORY = "https://github.com/photostructure/coding-skills"
+EXPECTED_WEBSITE = "https://photostructure.com/coding/"
+EXPECTED_SKILL_WEBSITES = {
+    ("coding", "gitplan"): f"{EXPECTED_WEBSITE}clean-commits/#gitplan",
+    ("coding", "handoff"): f"{EXPECTED_WEBSITE}claude-code-tpp/#handoff-wrap-up",
+    ("coding", "replan"): f"{EXPECTED_WEBSITE}claude-code-replan/",
+    ("coding", "review"): f"{EXPECTED_WEBSITE}claude-code-review/",
+    ("coding", "review-staged"): f"{EXPECTED_WEBSITE}claude-code-review/#review-staged",
+    ("coding", "second-opinion"): f"{EXPECTED_WEBSITE}claude-code-review/#second-opinion",
+    ("coding", "stage"): f"{EXPECTED_WEBSITE}clean-commits/#stage",
+    ("coding", "tpp"): f"{EXPECTED_WEBSITE}claude-code-tpp/",
+    ("coding", "tpp-orchestrate"): f"{EXPECTED_WEBSITE}claude-code-tpp/#tpp-orchestrate-drive-a-queue",
+    ("coding", "write-clearly"): EXPECTED_WEBSITE,
+    ("cpp", "project-setup"): EXPECTED_WEBSITE,
+    ("cpp", "resource-review"): EXPECTED_WEBSITE,
+    ("rust", "project-setup"): EXPECTED_WEBSITE,
+    ("security", "web-security-hardening"): EXPECTED_WEBSITE,
+    ("security", "web-security-review"): EXPECTED_WEBSITE,
+}
 EXPECTED_REVIEWER_METHODS = {
     "coding": "skills/review/references/single-pass.md",
     "security": "skills/web-security-review/references/validation-pass.md",
@@ -126,6 +144,10 @@ def validate_marketplaces(validation: Validation) -> dict[str, Path]:
         if not isinstance(name, str):
             validation.errors.append(f"{label}: missing name")
             continue
+        validation.check(
+            entry.get("homepage") == EXPECTED_WEBSITE,
+            f"{label}: homepage must be {EXPECTED_WEBSITE}",
+        )
         claude_names.add(name)
         root = resolve_inside_repo(validation, source, f"{label}.source")
         if root is None:
@@ -146,15 +168,23 @@ def parse_skill_frontmatter(validation: Validation, path: Path) -> dict[str, str
         validation.errors.append(f"{path.relative_to(ROOT)}: invalid frontmatter delimiters")
         return {}
     values: dict[str, str] = {}
+    parent_key: str | None = None
     for line in match.group(1).splitlines():
         if not line.strip() or ":" not in line:
             validation.errors.append(f"{path.relative_to(ROOT)}: unsupported frontmatter line: {line!r}")
             continue
-        key, value = line.split(":", 1)
-        values[key.strip()] = value.strip()
+        key, value = line.strip().split(":", 1)
+        if line.startswith("  "):
+            if parent_key is None:
+                validation.errors.append(f"{path.relative_to(ROOT)}: unsupported nested frontmatter line: {line!r}")
+                continue
+            values[f"{parent_key}.{key}"] = value.strip().strip('"')
+            continue
+        parent_key = key if not value.strip() else None
+        values[key] = value.strip()
     validation.check(
-        set(values) == {"name", "description"},
-        f"{path.relative_to(ROOT)}: frontmatter keys must be exactly name and description",
+        set(values) == {"name", "description", "metadata", "metadata.website"},
+        f"{path.relative_to(ROOT)}: frontmatter keys must be name, description, and metadata.website",
     )
     validation.check(bool(values.get("description")), f"{path.relative_to(ROOT)}: description is empty")
     return values
@@ -267,6 +297,15 @@ def validate_plugins_and_skills(validation: Validation, plugin_roots: dict[str, 
             manifest.get("repository") == EXPECTED_REPOSITORY,
             f"{marketplace_name}: native manifest repository must be {EXPECTED_REPOSITORY}",
         )
+        validation.check(
+            manifest.get("homepage") == EXPECTED_WEBSITE,
+            f"{marketplace_name}: native manifest homepage must be {EXPECTED_WEBSITE}",
+        )
+        interface = manifest.get("interface")
+        validation.check(
+            isinstance(interface, dict) and interface.get("websiteURL") == EXPECTED_WEBSITE,
+            f"{marketplace_name}: native interface.websiteURL must be {EXPECTED_WEBSITE}",
+        )
         version = manifest.get("version")
         validation.check(
             isinstance(version, str) and SEMVER_RE.fullmatch(version) is not None,
@@ -276,6 +315,10 @@ def validate_plugins_and_skills(validation: Validation, plugin_roots: dict[str, 
         validation.check(
             claude_manifest.get("version") == version,
             f"{marketplace_name}: Claude and native manifest versions must match",
+        )
+        validation.check(
+            claude_manifest.get("homepage") == EXPECTED_WEBSITE,
+            f"{marketplace_name}: Claude manifest homepage must be {EXPECTED_WEBSITE}",
         )
         validation.check(manifest.get("skills") == "./skills/", f"{marketplace_name}: skills must be ./skills/")
         if marketplace_name in EXPECTED_REVIEWER_METHODS:
@@ -301,6 +344,15 @@ def validate_plugins_and_skills(validation: Validation, plugin_roots: dict[str, 
             frontmatter = parse_skill_frontmatter(validation, skill_md)
             skill_name = frontmatter.get("name", "")
             validation.check(skill_name == skill_dir.name, f"{skill_md.relative_to(ROOT)}: name must match directory")
+            expected_website = EXPECTED_SKILL_WEBSITES.get((marketplace_name, skill_name))
+            validation.check(
+                expected_website is not None,
+                f"{skill_md.relative_to(ROOT)}: no expected website is configured",
+            )
+            validation.check(
+                frontmatter.get("metadata.website") == expected_website,
+                f"{skill_md.relative_to(ROOT)}: metadata.website must be {expected_website}",
+            )
             validate_openai_yaml(
                 validation,
                 skill_dir,

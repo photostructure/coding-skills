@@ -1,6 +1,8 @@
 ---
 name: tpp-orchestrate
 description: Work through a queue of Technical Project Plans serially — delegate each to a TDD subagent, get a cross-model second opinion, empirically vet every finding, and make one coherent commit per plan. Use when executing a documented plan queue such as _todo/ or _feat-name/ for a port, migration, or multi-stage feature.
+metadata:
+  website: "https://photostructure.com/coding/claude-code-tpp/#tpp-orchestrate-drive-a-queue"
 ---
 
 # TPP Orchestration

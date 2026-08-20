@@ -1,6 +1,8 @@
 ---
 name: replan
 description: Iterative deep planning with critiques and alternatives. Use when facing complex design decisions requiring thorough analysis.
+metadata:
+  website: "https://photostructure.com/coding/claude-code-replan/"
 ---
 
 # Replan

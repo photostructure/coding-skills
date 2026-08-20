@@ -12,6 +12,7 @@
       "name": "coding",
       "source": "./plugins/coding",
       "description": "Workflow skills: write-clearly (plain-language and unambiguous technical prose), replan (iterative planning), review, review-staged, and second-opinion (proof-based code review), gitplan and stage (disciplined Conventional-Commit staging), and the Technical Project Plan workflow (tpp, handoff, tpp-orchestrate — multi-session plan files with serial orchestration, TDD subagents, and cross-model vetted reviews).",
+      "homepage": "https://photostructure.com/coding/",
       "category": "workflow",
       "keywords": ["claude-code", "code-review", "planning", "git", "conventional-commits", "technical-writing", "plain-language"]
     },
@@ -19,6 +20,7 @@
       "name": "security",
       "source": "./plugins/security",
       "description": "Two complementary JavaScript/TypeScript web and Electron security skills: web-security-review traces data flow and reports only proven vulnerabilities; web-security-hardening performs applicability-aware OWASP ASVS 5.0.0 and Electron Security Checklist gap assessments across browser, desktop-runtime, identity, storage, packaging, update, and deployment controls.",
+      "homepage": "https://photostructure.com/coding/",
       "category": "security",
       "keywords": ["claude-code", "security", "security-review", "security-hardening", "security-best-practices", "owasp", "asvs", "csp", "javascript", "typescript", "web-security", "self-hosted", "oidc", "docker", "electron", "desktop-security"]
     },
@@ -26,6 +28,7 @@
       "name": "cpp",
       "source": "./plugins/cpp",
       "description": "Two complementary modern-C++ (C++17) native-addon skills: resource-review traces object and resource lifetimes and reports only proven memory/resource defects (use-after-free, double-free, leaks, out-of-bounds, integer overflow, data races, Node-API handle/reference/threadsafe-function misuse); project-setup performs an applicability-aware Met/Gap assessment of cross-platform node-gyp build config, per-OS/per-arch compiler hardening, sanitizer/static-analysis/CI wiring, and maintainable modern-C++ conventions.",
+      "homepage": "https://photostructure.com/coding/",
       "category": "development",
       "keywords": ["claude-code", "cpp", "modern-cpp", "memory-safety", "raii", "node-api", "node-addon-api", "node-gyp", "native-addon", "sanitizers", "addresssanitizer", "clang-tidy", "compiler-hardening", "cross-platform"]
     },
@@ -33,6 +36,7 @@
       "name": "rust",
       "source": "./plugins/rust",
       "description": "An applicability-aware Rust project-setup skill covering Cargo workspaces and features, edition/MSRV/toolchain policy, strict usable rustc/Clippy/rustfmt configuration, layered testing and CI, idiomatic safe API design, governed unsafe/FFI boundaries, packaging, and crates.io release preparation.",
+      "homepage": "https://photostructure.com/coding/",
       "category": "development",
       "keywords": ["claude-code", "rust", "cargo", "clippy", "rustfmt", "crates-io", "msrv", "unsafe-rust", "project-setup", "publishing", "maintainability"]
     }

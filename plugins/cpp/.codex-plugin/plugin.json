@@ -1,6 +1,6 @@
 {
   "name": "cpp",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "description": "Memory and resource safety review plus cross-platform build hardening for modern C++ projects and Node.js native addons.",
   "author": {
     "name": "Matthew McEachen",
@@ -28,6 +28,7 @@
     "longDescription": "Two evidence-focused workflows for proving C++ memory and resource defects and assessing cross-platform native build hardening.",
     "developerName": "PhotoStructure",
     "category": "Developer Tools",
+    "websiteURL": "https://photostructure.com/coding/",
     "capabilities": [
       "Read"
     ],

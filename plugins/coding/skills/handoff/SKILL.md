@@ -1,6 +1,8 @@
 ---
 name: handoff
 description: Update the active Technical Project Plan for handoff when context is running low or the session is ending, so the next session continues instead of restarting.
+metadata:
+  website: "https://photostructure.com/coding/claude-code-tpp/#handoff-wrap-up"
 ---
 
 # TPP Handoff

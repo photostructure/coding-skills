@@ -1,6 +1,8 @@
 ---
 name: write-clearly
 description: Draft and revise prose for clarity, precision, concision, unambiguous execution, and honest emphasis using Orwell's rules, classic composition principles, modern plain-language guidance, and a specialized standard for agent instructions. Use for documentation, explanations, reports, emails, UI copy, agent instructions, plans, reviews, specifications, handoffs, or any request to simplify, tighten, clarify, humanize, remove jargon, make text sound less machine-generated, or reduce ambiguous wording while preserving meaning and voice.
+metadata:
+  website: "https://photostructure.com/coding/"
 ---
 
 # Write Clearly

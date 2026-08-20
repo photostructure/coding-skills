@@ -1,6 +1,8 @@
 ---
 name: resource-review
 description: Top-level memory- and resource-safety code review for modern C/C++ (C++17), including Node.js native addons (node-addon-api / Node-API). Use when the user asks to "review C++/C for memory safety", "find a memory leak", "why does this segfault", "check for use-after-free / double-free / buffer overflow / data race", "resource/handle/fd leak", "review this native addon", "N-API / node-addon-api review", or to check native code with AddressSanitizer/UBSan/TSan/Valgrind. Reports only defects backed by a sanitizer trace, reproducer, or fully traced lifetime. Do not restart the full workflow for a delegated leaf validation task.
+metadata:
+  website: "https://photostructure.com/coding/"
 ---
 
 # C/C++ Resource & Memory Review
