@@ -46,19 +46,17 @@ that reported a finding. Reuse the namespace this session chose earlier. If it
 has none, run once:
 
 ```bash
-python3 "<review-skill>/scripts/new_review_namespace.py"
+printf '%03d\n' "$((RANDOM % 1000))"
 ```
 
-Use the script's sole stdout line unchanged for every review and follow-up in
-that session. The script selects an adjective and animal of 3–6 lowercase ASCII
-letters using the operating system's secure random source, such as `sly-fox` or
-`shy-bird`.
+Use the command's sole stdout line unchanged for every review and follow-up in
+that session. `$RANDOM` is Bash's pseudorandom integer; do not invent the number
+yourself.
 
-Give findings IDs in the form `#<adjective>-<animal>-A`, then `-B`, `-C`, and so
-on (for example, `#sly-fox-A`). IDs must match
-`^#[a-z]{3,6}-[a-z]{3,6}-[A-Z]+$`; never use bare IDs such as `#A`. After the
-complete report, ask the user whether to accept, veto, or comment on each
-finding; IDs do not replace the written findings.
+Give findings IDs in the form `#<namespace>-A`, then `-B`, `-C`, and so on (for
+example, `#123-A` or `#007-B`). IDs must match `^#[0-9]{3}-[A-Z]+$`; never use
+bare IDs such as `#A`. After the complete report, ask the user whether to accept,
+veto, or comment on each finding; IDs do not replace the written findings.
 
 A review request is read-only. Do not implement fixes merely because you found
 an issue; apply a fix and run its validation only after the user explicitly
