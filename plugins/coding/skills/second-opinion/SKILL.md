@@ -239,6 +239,18 @@ survive, follow it with `No issues found.` and do not invent ledger rows.
 | Scope | Model | Finding | Severity | Accept/Veto | Evidence (one line) | Verdict |
 | --- | --- | --- | --- | --- | --- | --- |
 
+## Scratch files
+
+Any copy this workflow makes — of the repo, of a build-output directory, of a
+file you replay edits onto — belongs in the operating system's temporary
+directory, in a fresh directory named for the project and the purpose. Never
+inside the checkout, and never under a home directory.
+
+Delete it before you finish. A repo or build-output copy runs to gigabytes,
+nothing reaps a home directory, and the out-of-disk failure that eventually
+follows surfaces somewhere unrelated — a test suite that hangs, a build that
+dies mid-link — costing far more to diagnose than the copy ever saved.
+
 ## Adapting for your project
 
 - **Name the ground truth explicitly** — e.g. "the vendored reference

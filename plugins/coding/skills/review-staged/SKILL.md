@@ -43,3 +43,15 @@ Otherwise, do not commit during the review:
    none was supplied. Emphasize motivation or consequence rather than restating
    the diff. Ask the user to review or edit it.
 3. Only commit after explicit user approval.
+
+## Scratch files
+
+Any copy this workflow makes — of the repo, of a build-output directory, of a
+file you replay edits onto — belongs in the operating system's temporary
+directory, in a fresh directory named for the project and the purpose. Never
+inside the checkout, and never under a home directory.
+
+Delete it before you finish. A repo or build-output copy runs to gigabytes,
+nothing reaps a home directory, and the out-of-disk failure that eventually
+follows surfaces somewhere unrelated — a test suite that hangs, a build that
+dies mid-link — costing far more to diagnose than the copy ever saved.
