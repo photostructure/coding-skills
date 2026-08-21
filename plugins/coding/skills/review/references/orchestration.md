@@ -53,10 +53,12 @@ Use the command's sole stdout line unchanged for every review and follow-up in
 that session. `$RANDOM` is Bash's pseudorandom integer; do not invent the number
 yourself.
 
-Give findings IDs in the form `#<namespace>-A`, then `-B`, `-C`, and so on (for
-example, `#123-A` or `#007-B`). IDs must match `^#[0-9]{3}-[A-Z]+$`; never use
-bare IDs such as `#A`. After the complete report, ask the user whether to accept,
-veto, or comment on each finding; IDs do not replace the written findings.
+Give finding IDs in the form `R<namespace>-A`, then `-B`, `-C`, and so on (for
+example, `R123-A` or `R007-B`). IDs must match `^R[0-9]{3}-[A-Z]+$`. Never
+prefix a session or finding ID with `#`; models and interfaces may interpret it
+as an issue reference. Never use bare IDs such as `A`. After the complete
+report, ask the user whether to accept, veto, or comment on each finding; IDs do
+not replace the written findings.
 
 A review request is read-only. Do not implement fixes merely because you found
 an issue; apply a fix and run its validation only after the user explicitly

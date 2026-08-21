@@ -298,7 +298,7 @@ complete enough to establish the violation without assumptions; otherwise it is 
 - Valgrind Helgrind manual: https://valgrind.org/docs/manual/hg-manual.html
 - Valgrind core manual (suppressions): https://valgrind.org/docs/manual/manual-core.html
 - google/sanitizers wiki — ASan LeakSanitizer & flags: https://github.com/google/sanitizers/wiki/AddressSanitizerLeakSanitizer
-- google/sanitizers issue #796 (ASan link-order / LD_PRELOAD): https://github.com/google/sanitizers/issues/796
+- google/sanitizers issue 796 (ASan link-order / LD_PRELOAD): https://github.com/google/sanitizers/issues/796
 - Node.js BUILDING.md (ASan build, Linux-only): https://github.com/nodejs/node/blob/main/BUILDING.md
 - Clang-Tidy (checks, `-p`, `--header-filter`, NOLINT): https://clang.llvm.org/extra/clang-tidy/
 - Clang Static Analyzer checkers (`scan-build`, checker names): https://clang.llvm.org/docs/analyzer/checkers.html
