@@ -134,6 +134,16 @@ plugin-loading failure even when Claude exits 0.
 Default to high effort; use xhigh for large or novel changes, security
 boundaries, concurrency, subtle stateful APIs, or hard-to-reproduce failures.
 
+Claude.ai OAuth may need to rewrite its credential store when refreshing an
+expired token. On Codex hosts whose filesystem sandbox can read but not write
+`~/.claude`, the command may return an expired-token 401 even though
+`claude auth status` reports logged in or the same command works in the user's
+terminal. In that specific case, retry the exact supervised command once with
+the host's narrow filesystem-sandbox escalation (`sandbox_permissions:
+require_escalated` where available) so Claude can refresh its existing
+credential. Do not read, print, copy, or manually rewrite the credential. If
+the escalated retry fails, use the unauthenticated fallback below.
+
 The command shapes above were empirically validated against a tiny committed
 repository with Claude Code 2.1.222 and `codex-cli` 0.146.1. Do not substitute a
 similarly named built-in review mode without re-validating it against a real
@@ -173,8 +183,10 @@ background and poll the same job until it exits:
 - **a fast non-zero with a CLI usage or unknown-option diagnostic** — the
   invocation is stale. Report it as a bug in this skill; never let it pass as
   "no issues found".
-- **127 or an authentication error** — use the missing/unauthenticated fallback
-  below. These are environment failures, not bugs in this skill.
+- **127 or an authentication error** — for an expired Claude.ai OAuth error
+  from Codex, use the one-time sandbox-escalation retry above. Otherwise, or if
+  that retry fails, use the missing/unauthenticated fallback below. These are
+  environment failures, not bugs in this skill.
 - **0 with an `Unknown command`, a missing-skill result, or a final review that
   does not begin with the required LAND, REVISE, or DISCARD verdict** — the CLI
   did not run the shared method. Treat it as a plugin-loading failure, not a
