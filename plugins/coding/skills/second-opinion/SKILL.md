@@ -78,10 +78,11 @@ python3 "<this-skill>/scripts/run_with_idle_timeout.py" \
   codex exec \
   -C "<target-repository>" \
   --sandbox read-only \
-  --ephemeral \
   -c 'model_reasoning_effort="high"' \
+  --json \
+  --output-last-message "<review-file>" \
   "{prompt}" \
-  > "<review-file>"
+  > "<events-file>"
 ```
 
 Begin the prompt file with `$coding:review`; use `$coding:review-staged` instead
@@ -96,8 +97,14 @@ codex plugin marketplace add photostructure/coding-skills
 codex plugin add coding@photostructure
 ```
 
-Codex sends progress to stderr and its final review to stdout, so the redirect
-captures a clean review while the stream stays watchable.
+Do not pass `--ephemeral`: the session must remain resumable if fixes require
+another review. `--output-last-message` captures the clean review while the
+JSONL stream keeps the supervisor fed. After a clean exit, record the session
+ID for the follow-up pass:
+
+```bash
+jq -r 'select(.type=="thread.started").thread_id' "<events-file>" | tail -n 1
+```
 
 **If you are Codex, ask Claude:**
 
@@ -126,6 +133,14 @@ what the reviewer is chewing on. Extract the review after a clean exit:
 jq -r 'select(.type=="result").result' "<events-file>"
 ```
 
+Claude persists print-mode sessions unless `--no-session-persistence` is set.
+Do not set it. Record the session ID for the follow-up pass:
+
+```bash
+jq -r 'if .type=="system" and .subtype=="init" then .session_id elif .type=="result" then .session_id else empty end' \
+  "<events-file>" | tail -n 1
+```
+
 Begin the prompt file with `/coding:review`; use `/coding:review-staged` instead
 when the scope is the staged diff. The `-p` prompt must begin with the slash
 command so Claude invokes the skill directly. An unavailable slash command is a
@@ -144,10 +159,10 @@ require_escalated` where available) so Claude can refresh its existing
 credential. Do not read, print, copy, or manually rewrite the credential. If
 the escalated retry fails, use the unauthenticated fallback below.
 
-The command shapes above were empirically validated against a tiny committed
-repository with Claude Code 2.1.222 and `codex-cli` 0.146.1. Do not substitute a
-similarly named built-in review mode without re-validating it against a real
-diff.
+These command shapes depend on Claude print-session persistence and `--resume`,
+and on Codex JSON events, `--output-last-message`, and `exec resume`. Revalidate
+them against a real diff when those CLI options change. Do not substitute a
+similarly named built-in review mode without the same validation.
 
 Construct the prompt file with all of the following:
 
@@ -174,7 +189,9 @@ pasted into the prompt instead of naming the review skill.
 Resolve `<this-skill>` to this skill's directory. Run either command in the
 background and poll the same job until it exits:
 
-- **0** — read the review.
+- **0** — read the review and record its session ID. A missing session ID does
+  not invalidate this pass, but it requires the fresh-session fallback in the
+  re-review loop.
 - **124 with the supervisor's `idle timeout:` diagnostic** — the reviewer went
   silent for 15 minutes. Discard the partial review, say so, and finish your own
   pass.
@@ -247,7 +264,72 @@ expected values come from ground truth (paste the command that produced them
 into the test's comment). The *full* suite must be green again — not just the
 new tests.
 
-## 5. Report the verdicts
+## 5. Re-read and re-review after fixes
+
+Any review-driven code edit can expose a new issue or introduce one. After the
+fixes and full suite are green, re-read the complete current diff yourself and
+ask the external reviewer to do the same. Do not limit either pass to checking
+that the prior fixes worked.
+
+Write a fresh follow-up prompt that:
+
+- identifies the same diff scope, substantive intent, and ground truth;
+- briefly lists the accepted fixes and the evidence for any vetoes, so the
+  reviewer does not have to infer what changed or re-litigate settled facts;
+- tells the reviewer to re-read every file in the current diff from the
+  beginning, inspect interactions introduced by the fixes, look for issues the
+  earlier pass missed, and return the normal `LAND`, `REVISE`, or `DISCARD`
+  report; and
+- retains `role: leaf-reviewer` and `delegation-budget: 0`.
+
+Resume the recorded external session through the same idle-timeout supervisor.
+For a Claude reviewer:
+
+```bash
+python3 "<this-skill>/scripts/run_with_idle_timeout.py" \
+  --prompt-file "<follow-up-prompt-file>" -- \
+  claude -p "{prompt}" \
+  --resume "<session-id>" \
+  --plugin-dir "<coding-plugin-root>" \
+  --permission-mode plan \
+  --model opus \
+  --effort high \
+  --output-format stream-json --verbose \
+  > "<next-events-file>"
+```
+
+For a Codex reviewer:
+
+```bash
+python3 "<this-skill>/scripts/run_with_idle_timeout.py" \
+  --prompt-file "<follow-up-prompt-file>" -- \
+  codex exec \
+  -C "<target-repository>" \
+  --sandbox read-only \
+  resume \
+  -c 'model_reasoning_effort="high"' \
+  --json \
+  --output-last-message "<next-review-file>" \
+  "<session-id>" \
+  "{prompt}" \
+  > "<next-events-file>"
+```
+
+Apply the same exit-status and output-validity checks as the first pass. If the
+CLI cannot resume the recorded session, launch a fresh external session with
+the complete original review prompt updated for the current diff, and disclose
+that continuity was unavailable. A resume failure does not justify skipping
+the re-review.
+
+Vet every new finding, fix and pin accepted findings, and run the full suite
+again. Repeat the re-read and resumed re-review after each batch of accepted
+fixes. Stop when a complete post-fix pass produces no newly accepted findings,
+or after three total external review passes. If the third pass produces an
+accepted finding, fix and test it, but report that the external re-review cap
+was reached rather than describing the result as a clean pass. Skip this loop
+when neither review caused a code edit.
+
+## 6. Report the verdicts
 
 Summarize for the user (and for whatever plan/PR document tracks this work):
 every substantive finding, accepted **and** vetoed, with one-line evidence for
