@@ -151,11 +151,13 @@ Draft a [Conventional Commits v1.0.0](https://www.conventionalcommits.org/en/v1.
 
 Add git trailers whenever the conversation provides the data, so credit and links aren't lost:
 
-- `Reported-by: <name>` — a user reported the bug or requested the feature
+- `Reported-by: <name>` — a third party reported it: a user, customer, forum poster, or issue filer
 - `Link: <url>` — a thread, issue, or message that gives context (no auto-close)
 - `Refs: <#NNN | url>` — related issue you do **not** want to auto-close
 - `Closes: #NNN` / `Fixes: #NNN` — a GitHub issue to auto-close on merge
 - `Fixes: <12-char-sha> ("subject")` — the bug-introducing commit (Linux-kernel form)
+
+`Reported-by` credits someone **outside** the work. Never name the repo owner, the person you are working with, or yourself — a maintainer finding a bug in their own project is not a bug report, and the commit's authorship already records who wrote the fix. When nobody outside reported it, omit the trailer.
 
 Repeat a trailer for multiple values (one per line) — never `Reported-by: a, b`. Prefer `git commit --trailer "Reported-by=name" --trailer "Link=https://..."` (git ≥2.32) so formatting stays canonical.
 
