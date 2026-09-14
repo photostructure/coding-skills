@@ -26,6 +26,16 @@ that failure mode and its counterpart — confidently wrong reviewers — and ow
 the gate that settles both. This skill owns the queue around it: delegate,
 gate, record, commit, repeat.
 
+## User direction
+
+The review gates below are workflow defaults. If the user directs you to commit
+the current work, follow that instruction without starting or resuming a review,
+waiting for a reviewer verdict, or asking for approval again, unless the user
+also requests review first. Use [stage](../stage/SKILL.md) to verify and commit
+the understood scope. Record completed, skipped, and unfinished review work
+accurately; do not mark unfinished implementation or acceptance criteria done.
+An instruction about the current commit does not waive reviews for later TPPs.
+
 ## Before the first TPP
 
 - Read the roadmap and every queued TPP's summary. Confirm dependency order.
@@ -86,7 +96,8 @@ Move the TPP to `_done/`, update the roadmap's status section, and make **one co
 
 ## Guidelines
 
-- **Never let a review gate slip.** "The agent's tests pass and the diff looks clean" is exactly the state in which review has found real bugs.
+- **Run the review gate by default.** Passing tests do not replace review;
+  explicit user direction can change or end the review workflow.
 - **Rebuild before testing built artifacts.** CLI/dist tests against a stale build silently test old code.
 - **Report honestly.** The per-TPP summary to the user lists: what shipped, findings accepted/vetoed (with one-line reasons), open questions, and anything you diverged on.
 

@@ -11,7 +11,17 @@ metadata:
 
 > More on these workflows: [photostructure.com/coding](https://photostructure.com/coding/)
 
-**Never create megacommits.** Each commit should be focused, coherent, and reviewable.
+## User direction
+
+User instructions take precedence over this skill's grouping, review, and
+approval defaults. If the user says "commit" or "approved, commit" for an
+understood scope, use [stage](../stage/SKILL.md) to verify and commit that scope.
+Unless the user also requests review first, do not restart planning, invoke
+review skills, wait for a second opinion, or ask for approval again. This rule
+also applies when the instruction arrives during the workflow below.
+
+Propose focused, coherent, reviewable commits. Honor grouping the user has
+already specified or approved.
 
 If the repository has a layered structure (e.g. shared utilities → core → feature packages → app), work through it from the lowest-level layer upward so dependencies are committed before their consumers.
 
@@ -38,11 +48,13 @@ If the repository has a layered structure (e.g. shared utilities → core → fe
    - Present them clearly with priority, problem, and proposed fix.
    - Apply fixes incrementally, re-staging as needed.
    - Re-review until clean.
-6. Present the proposed commit message and ask for approval. When the user approves, commit immediately — no second confirmation.
+6. Present the proposed commit message and ask for approval if commit authorization is still missing. When the user approves, commit immediately — no new review or second confirmation.
    - **Commit messages drive the changelog.** The body should describe user-facing behavior changes (what users will see/experience), not just implementation details. Lead with the "what changed for users" — implementation notes are secondary.
 
-Skip the second opinion only when the user asks you to, or when the theme is
-purely mechanical (formatter run, lockfile bump). Say so when you skip it.
+Skip the second opinion when the user directs you to commit, asks to skip
+review, or the theme is purely mechanical (formatter run, lockfile bump).
+Honor an explicit "review, then commit" sequence. Report review status briefly;
+do not turn a skipped review into another permission request.
 
 ### Phase 3: Repeat
 

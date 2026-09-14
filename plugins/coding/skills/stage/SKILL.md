@@ -11,6 +11,20 @@ metadata:
 
 Stage ONLY the changes that belong to the current body of work and compose a Conventional Commit message.
 
+## User direction
+
+User instructions take precedence over this skill's workflow defaults. A direct
+instruction such as "commit", "approved, commit", or "commit these changes"
+authorizes the commit for the understood scope. Use the supplied message or
+compose one; the user need not approve its exact wording separately.
+
+Unless the user also requests a review first, verify the staged scope and commit
+without starting or resuming a review, requiring a reviewer verdict, or asking
+for approval again. Loading this skill does not reopen settled decisions about
+scope, grouping, or review. Preserve unrelated changes and follow the
+repository's Git history safeguards. Ask for clarification only when the commit
+scope cannot be determined from the conversation and repository state.
+
 If, after checking the current git status, you find that all of your changes have been committed already, tell the user that: this skill is done.
 
 **NEVER `git add` an entire modified file unless every hunk in its diff belongs to this work.**
@@ -21,7 +35,8 @@ non-interactive partial staging on Windows and POSIX hosts.
 
 ## One concern per commit
 
-If the session touched **several distinct concerns**, you MUST propose splitting them into **separate commits** — one per concern. We want small, focused, coherent commits in git history, not dogpiles and junk drawers.
+When preparing a commit proposal, propose **separate commits** for distinct
+concerns unless the user has already specified or approved their grouping.
 
 Signs the session's work should be split:
 
@@ -31,9 +46,10 @@ Signs the session's work should be split:
 - Some changes are refactors/cleanup while others are behavior changes
 - Tests for feature A are mixed with implementation of feature B
 
-When splitting, run the full procedure below **once per commit**: inventory just that concern's files, stage them, compose a focused message, get approval, commit — then move on to the next concern. Do NOT stage everything at once and try to describe it in a single message.
+When splitting, run the procedure below **once per commit**: inventory just that concern's files, stage them, compose a focused message, and commit if authorized — then move on to the next concern. Approval covering several commits applies to all of them; do not ask again per commit. Do NOT stage everything at once and try to describe it in a single message.
 
-When in doubt about whether changes belong together, **ask the user** which grouping they prefer before staging.
+These grouping rules guide proposals before approval. Honor a grouping the user
+has already specified or approved; do not reopen it after a commit instruction.
 
 ## Gather live context
 
@@ -163,18 +179,23 @@ Repeat a trailer for multiple values (one per line) — never `Reported-by: a, b
 
 #### Constraints
 
-- **Total message must be under 10 lines** (subject + blank + body + footers).
-- If it takes more than 10 lines to explain, the commit does too much. Go back to step 2 and split into multiple commits by topic.
+- Keep the message under 10 lines (subject + blank + body + footers) unless the
+  user supplies or approves a longer message.
+- If a draft needs more space, shorten it or propose splitting by topic before
+  approval. Do not reopen approved scope or grouping to meet the line limit.
 - Match the style of the recent commits gathered above.
 
 **NEVER include**: Co-Authored-By trailers, AI attribution, line-by-line enumeration.
 
-### 6. Present and Await Approval
+### 6. Commit When Authorized
 
-Show the staged diff summary and proposed commit message. **Do not commit until
-the user explicitly approves that exact staged scope and message.** After
-approval, pass the message to `git commit` using the host's normal non-
-interactive argument or message-file mechanism; do not use shell substitution.
+If the user has already instructed you to commit or approved the proposed
+commit, proceed without another approval request. If the user only asked to
+stage changes or prepare a proposal, show the staged diff summary and proposed
+message, then wait for commit authorization.
+
+Pass the message to `git commit` using the host's normal non-interactive argument
+or message-file mechanism; do not use shell substitution.
 
 After verifying the staged diff contains exactly the intended commit, use plain
 `git commit`. Do not use `git commit --only -- <paths>` after partial staging:
@@ -207,8 +228,8 @@ commit or a revert, never an amend.
   working tree and discards everything you staged
 - About to `git commit --amend` — **STOP** and check `git log -1` first; if the
   tip is no longer your commit you would rewrite someone else's
-- Commit message exceeds 10 lines — **STOP**, split into multiple commits
-- About to commit without user approval — **STOP**
+- About to commit without user authorization — **STOP**; a direct commit
+  instruction already supplies that authorization
 
 ## Scratch files
 

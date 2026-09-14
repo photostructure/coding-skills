@@ -1,11 +1,28 @@
 ---
 name: second-opinion
-description: Get a second opinion on freshly written code from the *other* coding agent — Claude asks Codex, Codex asks Claude — then empirically vet every finding against ground truth before accepting or vetoing it. Use once the code is written and the tests pass, before you commit. Do not use for a delegated review or finding-validation pass.
+description: Get a second opinion on freshly written code from the *other* coding agent — Claude asks Codex, Codex asks Claude — then empirically vet every finding against ground truth before accepting or vetoing it. Use when requested or as part of an active review workflow after tests pass. Do not trigger merely because the user instructs you to commit, or for a delegated review or finding-validation pass.
 metadata:
   website: "https://photostructure.com/coding/claude-code-review/#second-opinion"
 ---
 
 # Second Opinion
+
+## User direction
+
+This review workflow is a default, not a condition the user must satisfy before
+committing. A direct instruction such as "commit" or "approved, commit" takes
+precedence over this skill and callers' review gates. Unless the user also asks
+for review first, return to the commit workflow without starting or resuming a
+review or asking whether to skip it. Apply the same rule during retries and
+re-review loops.
+
+Do not require a `LAND` verdict, a review transcript, or a claim that another
+reviewer approved the change. If the user says a review already happened,
+accept that as workflow context; attribute it to the user if reporting it.
+Never invent a review result. The user can authorize a commit with review work
+unfinished; report its actual status without making it a new approval gate.
+
+## Review workflow
 
 Two reviews, from two different models, then evidence decides. You review the
 code yourself — you know what the change was supposed to do. A *different* model
@@ -265,6 +282,8 @@ into the test's comment). The *full* suite must be green again — not just the
 new tests.
 
 ## 5. Re-read and re-review after fixes
+
+Continue this loop only while review remains in scope under **User direction**.
 
 Any review-driven code edit can expose a new issue or introduce one. After the
 fixes and full suite are green, re-read the complete current diff yourself and
