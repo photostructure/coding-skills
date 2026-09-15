@@ -59,7 +59,7 @@ captured output:
 ```text
 git status --short
 git diff --cached --stat
-git log --oneline -5
+git log -5 --format='%h %B'
 ```
 
 ## Procedure
@@ -149,7 +149,7 @@ Draft a [Conventional Commits v1.0.0](https://www.conventionalcommits.org/en/v1.
 ```
 <type>[(<scope>)][!]: <description>
 
-[optional body]
+[problem and rationale; omit only if clear from subject]
 
 [optional footer(s)]
 ```
@@ -159,8 +159,8 @@ Draft a [Conventional Commits v1.0.0](https://www.conventionalcommits.org/en/v1.
 - **Type** (REQUIRED): a noun prefix. `feat` = new feature, `fix` = bug fix. Other common types: `refactor`, `perf`, `test`, `docs`, `style`, `build`, `ci`, `chore`.
 - **Scope** (optional): a noun in parentheses after the type describing the section of the codebase, e.g. `fix(parser):`. Use the most significantly changed filename (no extension/path).
 - **`!`** (optional): append immediately before `:` to flag a breaking change, e.g. `feat!:` or `feat(api)!:`.
-- **Description** (REQUIRED): immediately after `: `. Short, imperative mood. **Focus on the _why_, not the _what_** — the diff already shows what changed. One sentence on motivation or consequence beats a list of renamed files.
-- **Body** (optional): one blank line after description. Free-form, any number of paragraphs.
+- **Description** (REQUIRED): a concrete, imperative subject. Avoid task-status summaries such as "finish cleanup".
+- **Body**: for nontrivial changes, explain the problem and why this fix in a short paragraph. Omit only when the subject conveys the rationale.
 - **Footer(s)** (optional): one blank line after body. Format: `token: value` or `token #value`. A `BREAKING CHANGE:` footer (uppercase) is synonymous with `!` in the type prefix.
 
 #### Trailers (attribution + references)
@@ -183,7 +183,7 @@ Repeat a trailer for multiple values (one per line) — never `Reported-by: a, b
   user supplies or approves a longer message.
 - If a draft needs more space, shorten it or propose splitting by topic before
   approval. Do not reopen approved scope or grouping to meet the line limit.
-- Match the style of the recent commits gathered above.
+- Match the style of the recent commits gathered above. Check that the complete proposal explains why.
 
 **NEVER include**: Co-Authored-By trailers, AI attribution, line-by-line enumeration.
 
