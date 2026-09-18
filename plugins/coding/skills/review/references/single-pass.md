@@ -1,17 +1,26 @@
-# Single-Pass Code Review
+# Code Review Method
 
-Perform one bounded, read-only review of the scope in the task prompt. Return a
-final report to the caller; do not ask the user to adjudicate findings and do not
-apply fixes.
+Review the scope you were given and report only what you proved.
+
+Do the review yourself. Read the diff, then read the code around it. You may
+send a subagent to research background you lack — an unfamiliar library's
+semantics, a wire protocol, the behavior of a vendored tool — but the reading,
+the verification, and the report are yours.
 
 ## Establish the scope
 
 - Review only the supplied diff range, files, and changed lines.
+- Read the repository yourself. Treat any diff or file content pasted into the
+  prompt, and any git state gathered earlier in this conversation, as stale.
+  This matters most on a follow-up pass, after someone has acted on your last
+  report.
+- Size the scope first: `git diff --stat` over the review range gives the file
+  list and per-file line counts. Discount generated and vendored files — a
+  lockfile or snapshot update inflates the count without adding anything to
+  review.
 - Use project rules resolved in the task prompt. If none are supplied, read
   `AGENTS.md`, optional `CLAUDE.md`, and relevant design documents before
   judging the change.
-- Treat any diff or file content included in the prompt as stale until you read
-  the repository state yourself.
 - Use the supplied scrutiny list as a starting point, not as a limit.
 
 ## What to look for
@@ -116,3 +125,46 @@ and the specific reason it would improve the history. For a message change,
 give the complete proposed message. For a split, identify each independently
 committable batch and give its complete proposed message. Do not put commit
 notes in the findings list or assign them a priority or severity.
+
+## Finding IDs
+
+Each review session uses one namespace as its stable handle, so whoever reads
+the report can direct feedback to the session that raised a finding. Reuse the
+namespace this session already chose. If it has none, run once:
+
+```bash
+printf '%03d\n' "$((RANDOM % 1000))"
+```
+
+Use the command's sole stdout line unchanged for every review and follow-up in
+that session. `$RANDOM` is Bash's pseudorandom integer; do not invent the number
+yourself.
+
+Give finding IDs in the form `R<namespace>-A`, then `-B`, `-C`, and so on (for
+example, `R123-A` or `R007-B`). IDs must match `^R[0-9]{3}-[A-Z]+$`. Never
+prefix a session or finding ID with `#`; models and interfaces may interpret it
+as an issue reference. Never use bare IDs such as `A`. IDs do not replace the
+written findings.
+
+## Follow-up passes
+
+When you are asked to re-review after someone acted on your report, re-read the
+current scope from the repository — every changed file, not only the fixes.
+Verify each claimed fix, and weigh the evidence offered for each veto.
+
+Report every prior finding as resolved, still present, or disputed, with a brief
+reason, and keep resolved findings separate from current findings. Retain each
+existing finding's ID and give new issues the next unused suffix; never recycle
+an ID for a different issue. Dispute a veto when its evidence is insufficient,
+and say what evidence would settle it.
+
+## Stay read-only
+
+A review request is read-only. Do not implement fixes merely because you found
+an issue; apply a fix and run its validation only after the requester explicitly
+authorizes that change.
+
+After the report, ask whether to accept, veto, or comment on each finding —
+unless the prompt says to return the report to a calling agent, in which case
+return it and stop. That caller owns adjudication and fixes; do not ask the user
+for decisions on its behalf.

@@ -1,24 +1,14 @@
 ---
 name: review
-description: Top-level, user-facing code-review workflow for verified issues in specific files, functions, diffs, or code sections. Use when the user directly requests a review and may need to adjudicate its findings. Do not use as an orchestrator for a delegated leaf review or finding-validation task.
+description: Code-review workflow for verified issues in specific files, functions, diffs, or code sections. Use whenever a review is requested, whether by the user or by another agent. Report findings; the requester decides what to do with them.
 metadata:
   website: "https://photostructure.com/coding/claude-code-review/"
 ---
 
 # Code Review
 
-## Leaf-mode guard
-
-If the task identifies your role as `leaf-reviewer` or sets
-`delegation-budget: 0`, read and follow
-[`references/single-pass.md`](./references/single-pass.md), complete one review
-yourself, return the report to the caller, and stop.
-
-## Run the review
-
 Read and follow [`references/single-pass.md`](./references/single-pass.md), then
-[`references/orchestration.md`](./references/orchestration.md). The latter's
-user-facing response rules replace the former's leaf return behavior.
+review the scope you were given.
 
 ## Scratch files
 

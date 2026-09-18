@@ -155,7 +155,6 @@ coding-skills/
 │   ├── coding/
 │   │   ├── .codex-plugin/plugin.json
 │   │   ├── .claude-plugin/plugin.json
-│   │   ├── agents/reviewer.md       # Claude-enforced leaf reviewer
 │   │   └── skills/
 │   │       ├── <skill>/
 │   │       │   ├── SKILL.md       # shared instructions
@@ -210,12 +209,14 @@ every skill, the `$plugin-creator` validator for every plugin, parse both
 marketplace JSON files, check relative Markdown links, and run
 `git diff --check`. Test both marketplace installations in fresh tasks.
 
-Review orchestration is bounded on both hosts. Claude Code uses each
-review-capable plugin's tool-restricted `reviewer` agent, which has neither the
-`Agent` nor `Skill` tool. Codex and other hosts use the same non-triggerable leaf
-methodology through a `delegation-budget: 0` prompt contract and task-local
-context. Review skills keep a leaf-mode guard so an implicit skill match cannot
-restart orchestration. Setup-only plugins do not invent reviewer agents.
+A review is done by the agent that was asked for it. The `coding` review
+reads the diff and the code around it itself, and delegates only background
+research it lacks — never the reading, the verification, or the report. The
+`security` and `cpp` reviews partition large scopes across each plugin's
+tool-restricted `reviewer` agent, which has neither the `Agent` nor `Skill`
+tool; on Codex and other hosts the same non-triggerable leaf methodology
+travels through a `delegation-budget: 0` prompt contract and task-local
+context. Setup-only plugins do not invent reviewer agents.
 
 `second-opinion` is the deliberate exception to the host-neutral rule: its whole
 job is to shell out to the *other* vendor's CLI (plain `codex exec` with a

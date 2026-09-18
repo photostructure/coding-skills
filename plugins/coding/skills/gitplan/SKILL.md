@@ -64,10 +64,9 @@ do not turn a skipped review into another permission request.
 
 ## Review Guidelines
 
-The per-theme review in Phase 2 is the `review-staged` workflow. Its method,
-delegation bound, and finding format live in
-[`../review/references/single-pass.md`](../review/references/single-pass.md) and
-[`../review/references/orchestration.md`](../review/references/orchestration.md);
+The per-theme review in Phase 2 is the `review-staged` workflow. Its method
+and finding format live in
+[`../review/references/single-pass.md`](../review/references/single-pass.md);
 don't restate them here.
 
 This skill owns only the grouping decision: whether each theme is a single

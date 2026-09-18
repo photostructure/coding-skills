@@ -1,6 +1,6 @@
 ---
 name: review-staged
-description: Top-level, user-facing workflow to review the staged Git diff for verified bugs and then prepare a clean Conventional Commit. Use when the user directly asks to review staged changes or prepare a commit proposal. Do not trigger on a direct commit instruction without a review request, or for a delegated leaf review or finding-validation task.
+description: Workflow to review the staged Git diff for verified bugs and then prepare a clean Conventional Commit. Use when the user directly asks to review staged changes or prepare a commit proposal. Do not trigger on a direct commit instruction without a review request.
 metadata:
   website: "https://photostructure.com/coding/claude-code-review/#review-staged"
 ---
@@ -21,14 +21,6 @@ verify and commit that scope without starting or resuming a review or asking
 for approval again. This also applies after findings or a review verdict; a
 reviewer's recommendation does not overrule the user's commit instruction.
 
-## Leaf-mode guard
-
-If the task identifies your role as `leaf-reviewer` or sets
-`delegation-budget: 0`, read and follow
-[`../review/references/single-pass.md`](../review/references/single-pass.md),
-complete one review yourself, return the report to the caller, and stop before
-the commit flow below.
-
 ## Run the review
 
 Size the scope before reading it: `git diff --cached --stat`. Review all staged
@@ -36,10 +28,7 @@ content as supplied. The size or coherence of a proposed commit does not affect
 the review verdict.
 
 With the staged diff as the scope, read and follow
-[`../review/references/single-pass.md`](../review/references/single-pass.md), then
-[`../review/references/orchestration.md`](../review/references/orchestration.md).
-The latter's user-facing response rules replace the former's leaf return
-behavior.
+[`../review/references/single-pass.md`](../review/references/single-pass.md).
 
 After the findings, use the shared `Commit notes` section for optional message
 or grouping advice. If a split would improve reviewability or make later reverts

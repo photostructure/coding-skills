@@ -31,8 +31,9 @@ EXPECTED_SKILL_WEBSITES = {
     ("security", "web-security-hardening"): EXPECTED_WEBSITE,
     ("security", "web-security-review"): EXPECTED_WEBSITE,
 }
+# Plugins whose review skills partition a large scope across leaf reviewers. The
+# coding review does its own reading and verification, so it has no such agent.
 EXPECTED_REVIEWER_METHODS = {
-    "coding": "skills/review/references/single-pass.md",
     "security": "skills/web-security-review/references/validation-pass.md",
     "cpp": "skills/resource-review/references/validation-pass.md",
 }
@@ -326,7 +327,7 @@ def validate_plugins_and_skills(validation: Validation, plugin_roots: dict[str, 
         else:
             validation.check(
                 not (plugin_root / "agents" / "reviewer.md").exists(),
-                f"{marketplace_name}: setup-only plugin must not invent a reviewer agent",
+                f"{marketplace_name}: plugin must not invent a reviewer agent",
             )
 
         skills_dir = plugin_root / "skills"
