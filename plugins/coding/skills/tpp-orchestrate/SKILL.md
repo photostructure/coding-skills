@@ -78,10 +78,11 @@ wasted.
 ### 4. Run the review gate
 
 Read and follow [../second-opinion/SKILL.md](../second-opinion/SKILL.md) on this
-TPP's diff. The gate owns reviewer creation, vetting, and pinning tests — do not
-add reviewers here or restate its rules. Give it this TPP's spec/reference
-files, the diff range, and a scrutiny list of the riskiest areas the plan
-touches.
+TPP's diff. The gate owns reviewer creation, adjudication, and pinning tests —
+do not add reviewers here or restate its rules. Give it what its first step asks
+for: the changed files and diff range, the proposed commit message, this TPP's
+spec and reference paths, and the ground-truth command. Keep your own suspicions
+out of it; the gate's reviewer reads the code independently.
 
 You are the gate's second reviewer, and the only one who knows the whole roadmap.
 Read the new code yourself while the external review runs.
@@ -104,6 +105,6 @@ Move the TPP to `_done/`, update the roadmap's status section, and make **one co
 ## Adapting for your project
 
 - **Name the ground truth explicitly** — e.g. "CPython 3.12 via `uv run python -c ...` in the reference submodule", "the staging API", "the RFC's test vectors". The vetting step is only as strong as this.
-- **Reviewer choices and scrutiny-list tuning** live in the gate — adapt [../second-opinion/SKILL.md](../second-opinion/SKILL.md), and this loop inherits it.
+- **Reviewer choices and review focus** live in the gate — adapt [../second-opinion/SKILL.md](../second-opinion/SKILL.md), and this loop inherits it.
 - **Tune the model heuristic** to your roster — the invariant is "risk decides the model", not the specific names.
 - **Rename the file conventions** (`_todo/`, `_feat-<name>/`, `_done/`, and the roadmap or queue README) to whatever your plan system uses; the loop doesn't care about paths.

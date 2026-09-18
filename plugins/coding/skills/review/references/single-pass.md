@@ -101,9 +101,11 @@ Begin with exactly one top-level verdict:
 
 `Verdict: LAND | REVISE | DISCARD`
 
-- **LAND** — the content is worth landing. Commit notes may still recommend
-  different packaging.
-- **REVISE** — the change is worth landing after the reported defects are fixed.
+- **LAND** — the content is worth landing as it stands. Quality observations and
+  commit notes may still ride along.
+- **REVISE** — the change is worth landing once the reported defects are fixed.
+  Any defect you would want fixed before landing makes the verdict `REVISE`; do
+  not return `LAND` with defects attached.
 - **DISCARD** — do not land the change at all because its premise is wrong, it is
   unnecessary, or the problem is already handled elsewhere. This is an expected
   review outcome, not a failure of the review.

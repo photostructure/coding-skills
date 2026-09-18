@@ -24,7 +24,7 @@ and publishing preparation.
 | coding | `replan` | Iteratively critique alternatives before settling a complex design. |
 | coding | `review` | Review code and report only issues proven through the full code path. |
 | coding | `review-staged` | Apply the same proof gate to the staged diff before proposing a commit. |
-| coding | `second-opinion` | Get a cross-model review, then accept or veto every finding with evidence. |
+| coding | `second-opinion` | Get a cross-model review, adjudicate each finding with evidence, then re-review. |
 | coding | `gitplan` | Untangle a mixed working tree into coherent Conventional Commits. |
 | coding | `stage` | Stage only the hunks attributable to the current body of work. |
 | coding | `tpp` | Continue the current phase of a living Technical Project Plan (TPP). |
@@ -224,7 +224,10 @@ job is to shell out to the *other* vendor's CLI (plain `codex exec` with a
 prompt from Codex), so it names both hosts. The validator allows those exact
 review invocations in that one file and applies every other portability rule to
 it. It falls back to a same-model reviewer, and says so, when the other CLI is
-missing or unauthenticated.
+missing or unauthenticated. The external reviewer runs `review` and returns its
+findings to the calling agent, which adjudicates them and resumes that same
+reviewer session with the results — same finding IDs, evidence for every accept
+and veto — until the reviewer lands the change or four passes are spent.
 
 ## Adapting the workflows
 

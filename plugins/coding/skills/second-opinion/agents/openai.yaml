@@ -1,4 +1,4 @@
 interface:
   display_name: "Second Opinion"
-  short_description: "Get a cross-model review, vetted against ground truth"
-  default_prompt: "Use $coding:second-opinion to get a cross-model review and vet every finding."
+  short_description: "Cross-model review, settled against ground truth"
+  default_prompt: "Use $coding:second-opinion to review the changed files and proposed commit message, adjudicate every finding, and resume the same reviewer session to re-read and re-review."

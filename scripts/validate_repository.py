@@ -478,9 +478,7 @@ def validate_portability_tokens(validation: Validation) -> None:
         encoding="utf-8"
     )
     for invocation in (
-        "/coding:review-staged",
         "/coding:review",
-        "$coding:review-staged",
         "$coding:review",
     ):
         validation.check(
