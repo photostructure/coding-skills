@@ -1,0 +1,4 @@
+interface:
+  display_name: "Find Change Session"
+  short_description: "Find and resume the session that wrote a change"
+  default_prompt: "Use $coding:find to find and resume the session that wrote the uncommitted changes in this file."

@@ -27,6 +27,7 @@ and publishing preparation.
 | coding | `second-opinion` | Get a cross-model review, adjudicate each finding with evidence, then re-review. |
 | coding | `gitplan` | Untangle a mixed working tree into coherent Conventional Commits. |
 | coding | `stage` | Stage only the hunks attributable to the current body of work. |
+| coding | `find` | Find the Claude Code or Codex session that wrote an uncommitted change, and print the command that resumes it. |
 | coding | `tpp` | Continue the current phase of a living Technical Project Plan (TPP). |
 | coding | `handoff` | Update the active TPP so a later session can continue without rediscovery. |
 | coding | `tpp-orchestrate` | Drive a queue of TPPs through TDD, independent review gates, and coherent commits. |

@@ -15,6 +15,7 @@ EXPECTED_PLUGINS = {"coding", "security", "cpp", "rust"}
 EXPECTED_REPOSITORY = "https://github.com/photostructure/coding-skills"
 EXPECTED_WEBSITE = "https://photostructure.com/coding/"
 EXPECTED_SKILL_WEBSITES = {
+    ("coding", "find"): EXPECTED_WEBSITE,
     ("coding", "gitplan"): f"{EXPECTED_WEBSITE}clean-commits/#gitplan",
     ("coding", "handoff"): f"{EXPECTED_WEBSITE}claude-code-tpp/#handoff-wrap-up",
     ("coding", "replan"): f"{EXPECTED_WEBSITE}claude-code-replan/",
@@ -360,7 +361,7 @@ def validate_plugins_and_skills(validation: Validation, plugin_roots: dict[str, 
                 f"{marketplace_name}:{skill_name}",
             )
 
-    validation.check(validation.skill_count == 15, f"expected 15 skills, found {validation.skill_count}")
+    validation.check(validation.skill_count == 16, f"expected 16 skills, found {validation.skill_count}")
 
 
 def validate_install_documentation(validation: Validation) -> None:
