@@ -9,7 +9,9 @@ the verification, and the report are yours.
 
 ## Establish the scope
 
-- Review only the supplied diff range, files, and changed lines.
+- Review only the supplied diff range, files, and changed lines. Code outside
+  them matters only where the change leaves it inconsistent; see **Omissions**
+  below.
 - Read the repository yourself. Treat any diff or file content pasted into the
   prompt, and any git state gathered earlier in this conversation, as stale.
   This matters most on a follow-up pass, after someone has acted on your last
@@ -21,6 +23,11 @@ the verification, and the report are yours.
 - Use project rules resolved in the task prompt. If none are supplied, read
   `AGENTS.md`, optional `CLAUDE.md`, and relevant design documents before
   judging the change.
+- If the prompt states what the change is for — a task, a requirement, or a
+  commit message — write the expected-change list before you read any hunk of
+  the diff: what a complete version of that change must touch, such as callers,
+  tests, documentation, configuration, migrations, and error paths. A list
+  written after reading the hunks only repeats them.
 - Use the supplied scrutiny list as a starting point, not as a limit.
 
 ## What to look for
@@ -36,6 +43,32 @@ the filters never get to consider.
   authoritative; explain what is correct, which may be neither.
 - Divergence from requirements, accepted plans, or the task's substantive
   intent. A proposed commit message is metadata, not a requirement.
+- **Symptom fixes:** a null check, catch, retry, default, clamp, longer timeout,
+  or special case added where a bad value arrives instead of where it
+  originates, or a test expectation changed to match new output. A symptom fix
+  is a defect even when the guard is deliberate. The proof names the origin as
+  `file:line` and shows either another path by which the origin still fails or
+  the signal the new code hides from callers.
+- **Omissions:** dependent code the change left inconsistent with its new
+  behavior — a caller, test, document, configuration value, or error path —
+  including every item on the expected-change list that the diff does not
+  contain and still needs. Report it at the inconsistent line, even when that
+  line did not change or is outside the supplied files.
+
+**Unexplained changes**
+
+For each function or branch the change adds or modifies, answer three questions
+from what a later reader will have: the code, its tests, its documentation, its
+commit history, and the proposed commit message.
+
+1. What requirement or failure does it address?
+2. What input reaches it?
+3. What breaks if it is deleted?
+
+You need not write the answers down. When you cannot answer one, the change is
+**Unexplained**. A change you could explain only from other context pasted into
+your prompt is also Unexplained, because the next reader of the code will not
+have that prompt.
 
 **Quality observations**
 
@@ -78,9 +111,12 @@ candidate:
 5. Discard the candidate if an existing guard handles it, the behavior is
    intentional, or the failure cannot be demonstrated.
 
+Steps 4 and 5 do not apply to an Unexplained change. Steps 1–3 are your attempt
+to answer its three questions, and the finding stands when that attempt fails.
+
 Do not report style preferences, speculative future risks, feature requests,
-issues outside changed lines, or diagnostics a compiler, typechecker, or linter
-already reports.
+problems in unchanged code that the change did not cause, or diagnostics a
+compiler, typechecker, or linter already reports.
 
 Do not suggest a change that contradicts the project's stated policy in
 `AGENTS.md`, `CLAUDE.md`, or design documents read during scoping. Such a
@@ -93,7 +129,8 @@ deliberately. Report it only if you can prove the suppression itself is wrong.
 ## Return the report
 
 This is the second filter, and the only place severity decides anything. Of the
-candidates that survived verification, report every defect; report a quality
+candidates that survived verification, report every defect and every
+Unexplained change; report a quality
 observation only when it is High or Medium impact — one that would change what
 the author ships. Drop unlikely corner cases.
 
@@ -105,7 +142,8 @@ Begin with exactly one top-level verdict:
   commit notes may still ride along.
 - **REVISE** — the change is worth landing once the reported defects are fixed.
   Any defect you would want fixed before landing makes the verdict `REVISE`; do
-  not return `LAND` with defects attached.
+  not return `LAND` with defects attached. An Unexplained change also makes the
+  verdict `REVISE`: you cannot vouch for code you cannot explain.
 - **DISCARD** — do not land the change at all because its premise is wrong, it is
   unnecessary, or the problem is already handled elsewhere. This is an expected
   review outcome, not a failure of the review.
@@ -117,6 +155,10 @@ Sort findings by severity. For each finding include:
 - **Proof:** the traced path, test, or ground-truth comparison
 - **Solution:** a focused correction
 - **Location:** `file:line`
+
+For an Unexplained change, **Problem** names the question you could not answer,
+**Proof** lists what you read and why it did not answer the question, and
+**Solution** is the question the author must answer.
 
 Require proof for every finding. If nothing survives verification, return
 `No issues found.` after the verdict. Do not pad the report.
@@ -159,6 +201,11 @@ reason, and keep resolved findings separate from current findings. Retain each
 existing finding's ID and give new issues the next unused suffix; never recycle
 an ID for a different issue. Dispute a veto when its evidence is insufficient,
 and say what evidence would settle it.
+
+An Unexplained change is resolved when its answer is in the code, tests,
+documentation, or commit message, including an answer the author shows was
+already there. An answer that exists only in the author's reply to you leaves
+it still present.
 
 ## Stay read-only
 

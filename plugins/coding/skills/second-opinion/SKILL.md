@@ -261,7 +261,8 @@ The verdict does not decide what you adjudicate. A `LAND` carrying findings
 still carries findings: settle every one. An empty findings list ends the work,
 not the word `LAND`.
 
-Then settle each remaining finding — the reviewer's and your own:
+Then settle each remaining finding — the reviewer's and your own. An
+Unexplained finding follows its own rule below. For every other finding:
 
 1. Build the empirical test: run ground truth and the new code on the same
    input, and compare. A finding you cannot test this way becomes an open
@@ -272,6 +273,20 @@ Then settle each remaining finding — the reviewer's and your own:
    internals on a path no contract pins, for instance.
 4. When the diagnosis is right but the proposed fix is mediocre, take the better
    fix. Reviewers identify problems; you own the remedy.
+
+An Unexplained finding means the reviewer could not say why an added or
+modified function or branch exists from the code, tests, documentation, and
+commit message. No
+ground truth settles it. Answer the reviewer's question instead:
+
+- **Veto** when the answer is already in the code, tests, documentation, or
+  commit message. Cite where.
+- **Accept** when it is not, and put the answer there: a clearer name, a test,
+  a comment, or the commit message. Simplifying the code until no answer is
+  needed also settles it.
+- If you cannot answer the question either, trace what the code does until you
+  can, then accept or veto as above. A defect found this way is settled like
+  any other finding.
 
 Reviewer confidence, eloquence, and *agreement between the two passes* are not
 evidence. Two models converging on the same wrong finding is common; one command
@@ -293,8 +308,9 @@ carries no special weight. It needs the same recorded evidence as anyone's.
 
 Apply the accepted fixes. **Every accepted finding gets a pinning test** whose
 expected values come from ground truth; paste the command that produced them
-into the test's comment. The *full* suite must be green again — not just the
-new tests.
+into the test's comment. An accepted Unexplained finding whose fix changed no
+behavior — a rename, a comment, or a commit-message change — needs no pinning
+test. The *full* suite must be green again — not just the new tests.
 
 ## 5. Re-review in the same session
 
