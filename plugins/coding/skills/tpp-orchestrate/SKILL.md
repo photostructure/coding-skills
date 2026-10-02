@@ -68,7 +68,7 @@ selection, keep the same risk-based scrutiny in the prompt and review gate.
 The prompt must include:
 
 - The TPP path and the sources of truth (spec files, reference implementation paths).
-- **Tests first**: port or write the acceptance tests before implementing, then implement until green. The _full_ suite must stay green — not just the new tests.
+- **Tests first**: port or write the acceptance tests, run them and confirm they fail, then implement until they pass. Every test the change could affect must pass too, not just the new ones.
 - Project pitfalls relevant to this TPP (from `AGENTS.md`, optional
   `CLAUDE.md`, or the TPP itself).
 - "You cannot talk to the user. Record open questions, assumptions you made, and every intentional divergence from the plan in your final report."

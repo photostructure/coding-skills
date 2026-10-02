@@ -17,7 +17,7 @@ decisions back to those same reviewers until both agree the batch should land.
 3. Ask both reviewers to review each batch, and read the same code yourself
    while they work.
 4. Accept or veto each finding, with evidence.
-5. Apply the accepted fixes and pin them with tests.
+5. Pin each accepted finding with a test that fails, then fix it.
 6. Send both reviewer sessions your adjudication and the updated file list, and
    have them re-read and re-review.
 7. Repeat 4-6 until both reviewers land the batch's current tree, you accept a
@@ -355,21 +355,22 @@ It can also *contain* the defect: a wrong premise this session has carried since
 birth, which is exactly what the independent pass is for. So a veto of yours
 carries no special weight. It needs the same recorded evidence as anyone's.
 
-## 5. Fix and pin
+## 5. Pin, then fix
 
-Apply the accepted fixes. **Every accepted finding gets a pinning test** whose
-expected values come from ground truth; paste the command that produced them
-into the test's comment. An accepted Unexplained finding whose fix changed no
-behavior — a rename, a comment, or a commit-message change — needs no pinning
-test. The *full* suite must be green again — not just the new tests.
+**Every accepted finding gets a pinning test** whose expected values come from
+ground truth; paste the command that produced them into the test's comment. Run
+it against the unfixed code and confirm it fails, then apply the fix. An
+accepted Unexplained finding whose fix changed no behavior — a rename, a
+comment, or a commit-message change — needs no pinning test. Every test the
+fixes could affect must pass again, not just the new pinning tests.
 
 ## 6. Re-review in the same sessions
 
 Continue this loop only while review remains in scope under **User direction**.
 
 Send your adjudication to both of the batch's reviewers, even when you vetoed
-everything and changed no code. If you applied fixes, wait until their tests and
-the full suite are green. Re-read the complete current scope yourself, and ask
+everything and changed no code. If you applied fixes, wait until every test
+they could affect passes. Re-read the complete current scope yourself, and ask
 each reviewer to do the same:
 
 ```text
