@@ -25,6 +25,11 @@ scope, grouping, or review. Preserve unrelated changes and follow the
 repository's Git history safeguards. Ask for clarification only when the commit
 scope cannot be determined from the conversation and repository state.
 
+When project instructions require review before every commit, a commit
+instruction for changes that review has not finished on since they last
+changed runs the review first, and only an explicit instruction to skip review
+skips it.
+
 If, after checking the current git status, you find that all of your changes have been committed already, tell the user that: this skill is done.
 
 **NEVER `git add` an entire modified file unless every hunk in its diff belongs to this work.**

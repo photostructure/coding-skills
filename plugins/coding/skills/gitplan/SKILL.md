@@ -19,6 +19,10 @@ understood scope, use [stage](../stage/SKILL.md) to verify and commit that scope
 Unless the user also requests review first, do not restart planning, invoke
 review skills, wait for a second opinion, or ask for approval again. This rule
 also applies when the instruction arrives during the workflow below.
+When project instructions require review before every commit, a commit
+instruction for changes that review has not finished on since they last
+changed runs the review first, and only an explicit instruction to skip review
+skips it.
 
 Propose focused, coherent, reviewable commits. Honor grouping the user has
 already specified or approved.
@@ -41,18 +45,20 @@ If the repository has a layered structure (e.g. shared utilities → core → fe
 ### Phase 2: Stage, Review, and Commit (per theme)
 
 1. Stage only files belonging to the selected theme using `git add <files>`, including any related docs/plans decided in Phase 1.
-2. **Kick off the cross-model second opinion on the staged diff, in the background if the host supports it** — step 2 of [`../second-opinion/SKILL.md`](../second-opinion/SKILL.md). Start it first so it runs while you review. The external reviewer has no staged-only scope, so name the staged file list in the prompt: "review only these staged files: `<list>`; the other uncommitted changes belong to later commits — ignore them."
+2. **Kick off the second-opinion reviewers on the staged diff, in the background if the host supports it** — steps 2-3 of [`../second-opinion/SKILL.md`](../second-opinion/SKILL.md). Start them first so they run while you review. The reviewers have no staged-only scope, so name the staged file list in the prompt: "review these staged files: `<list>`. The other uncommitted changes belong to later commits; read them where they interact with the staged code. Report any defect the staged diff causes, including in callers or dependencies outside it."
 3. Review the staged changes yourself using the `review-staged` skill. Use a capable model — reviews are important.
-4. Collect the second opinion, then vet every finding from both passes against ground truth — steps 3-5 of the gate. Accept and veto only with evidence.
+4. Collect the second opinions, then vet every finding from every review against ground truth and report the result — steps 4-7 of the gate. Accept and veto only with evidence.
 5. If issues are accepted:
    - Present them clearly with priority, problem, and proposed fix.
    - Apply fixes incrementally, re-staging as needed.
    - Re-review until clean.
-6. Present the proposed commit message and ask for approval if commit authorization is still missing. When the user approves, commit immediately — no new review or second confirmation.
+6. Present the gate's report, including its per-batch pass counts and model verdicts, with the proposed commit message, and ask for approval if commit authorization is still missing. When the user approves, commit immediately — no new review or second confirmation.
    - **Commit messages drive the changelog.** The body should describe user-facing behavior changes (what users will see/experience), not just implementation details. Lead with the "what changed for users" — implementation notes are secondary.
 
 Skip the second opinion when the user directs you to commit, asks to skip
-review, or the theme is purely mechanical (formatter run, lockfile bump).
+review, or the theme is purely mechanical (formatter run, lockfile bump). When
+project instructions require review before every commit, skip it only when the
+user explicitly asks to skip review.
 Honor an explicit "review, then commit" sequence. Report review status briefly;
 do not turn a skipped review into another permission request.
 

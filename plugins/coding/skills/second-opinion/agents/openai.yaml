@@ -1,4 +1,4 @@
 interface:
   display_name: "Second Opinion"
-  short_description: "Cross-model review, settled against ground truth"
-  default_prompt: "Use $coding:second-opinion to review the changed files and proposed commit message, adjudicate every finding, and resume the same reviewer session to re-read and re-review."
+  short_description: "Codex and Claude reviews, settled against ground truth"
+  default_prompt: "Use $coding:second-opinion to review the changed files and proposed commit message, adjudicate every finding, and resume the same reviewer sessions to re-read and re-review."

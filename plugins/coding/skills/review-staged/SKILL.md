@@ -20,6 +20,10 @@ Unless the user also requests review first, use [stage](../stage/SKILL.md) to
 verify and commit that scope without starting or resuming a review or asking
 for approval again. This also applies after findings or a review verdict; a
 reviewer's recommendation does not overrule the user's commit instruction.
+When project instructions require review before every commit, a commit
+instruction for changes that review has not finished on since they last
+changed runs the review first, and only an explicit instruction to skip review
+skips it.
 
 ## Run the review
 

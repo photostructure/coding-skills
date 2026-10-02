@@ -35,6 +35,10 @@ also requests review first. Use [stage](../stage/SKILL.md) to verify and commit
 the understood scope. Record completed, skipped, and unfinished review work
 accurately; do not mark unfinished implementation or acceptance criteria done.
 An instruction about the current commit does not waive reviews for later TPPs.
+When project instructions require review before every commit, a commit
+instruction for changes that review has not finished on since they last
+changed runs the review first, and only an explicit instruction to skip review
+skips it.
 
 ## Before the first TPP
 
@@ -82,10 +86,10 @@ TPP's diff. The gate owns reviewer creation, adjudication, and pinning tests —
 do not add reviewers here or restate its rules. Give it what its first step asks
 for: the changed files and diff range, the proposed commit message, this TPP's
 spec and reference paths, and the ground-truth command. Keep your own suspicions
-out of it; the gate's reviewer reads the code independently.
+out of it; the gate's reviewers read the code independently.
 
-You are the gate's second reviewer, and the only one who knows the whole roadmap.
-Read the new code yourself while the external review runs.
+You are the gate's third reviewer, and the only one who knows the whole roadmap.
+Read the new code yourself while the reviewers run.
 
 ### 5. Record the verdicts
 

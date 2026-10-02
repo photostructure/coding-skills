@@ -24,7 +24,7 @@ and publishing preparation.
 | coding | `replan` | Iteratively critique alternatives before settling a complex design. |
 | coding | `review` | Review code and report only issues proven through the full code path. |
 | coding | `review-staged` | Apply the same proof gate to the staged diff before proposing a commit. |
-| coding | `second-opinion` | Get a cross-model review, adjudicate each finding with evidence, then re-review. |
+| coding | `second-opinion` | Have fresh Codex and Claude reviewers review small batches, adjudicate each finding with evidence, then re-review. |
 | coding | `gitplan` | Untangle a mixed working tree into coherent Conventional Commits. |
 | coding | `stage` | Stage only the hunks attributable to the current body of work. |
 | coding | `find` | Find the Claude Code or Codex session that wrote an uncommitted change, and print the command that resumes it. |
@@ -220,15 +220,16 @@ travels through a `delegation-budget: 0` prompt contract and task-local
 context. Setup-only plugins do not invent reviewer agents.
 
 `second-opinion` is the deliberate exception to the host-neutral rule: its whole
-job is to shell out to the *other* vendor's CLI (plain `codex exec` with a
-`$coding:review` prompt from Claude Code, `claude -p` with a `/coding:review`
-prompt from Codex), so it names both hosts. The validator allows those exact
-review invocations in that one file and applies every other portability rule to
-it. It falls back to a same-model reviewer, and says so, when the other CLI is
-missing or unauthenticated. The external reviewer runs `review` and returns its
-findings to the calling agent, which adjudicates them and resumes that same
-reviewer session with the results — same finding IDs, evidence for every accept
-and veto — until the reviewer lands the change or four passes are spent.
+job is to shell out to both vendors' CLIs (plain `codex exec` with a
+`$coding:review` prompt, `claude -p` with a `/coding:review` prompt), so it
+names both hosts. The validator allows those exact review invocations in that
+one file and applies every other portability rule to it. The caller splits the
+change into batches of about 200 weighted lines, and each batch gets a fresh
+reviewer from each CLI; when a CLI is missing or unauthenticated, a subagent
+reviews in its place, and the report marks that model's verdict as missing. Each reviewer runs `review` and returns
+its findings to the calling agent, which adjudicates them and resumes those
+same reviewer sessions with the results — same finding IDs, evidence for every
+accept and veto — until both reviewers land the batch or four passes are spent.
 
 ## Adapting the workflows
 
