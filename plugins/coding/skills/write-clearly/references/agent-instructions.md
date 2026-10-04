@@ -10,6 +10,7 @@ status reports, and handoffs.
 - [Name the concrete elements](#name-the-concrete-elements)
 - [Make instructions executable](#make-instructions-executable)
 - [Control scope and logic](#control-scope-and-logic)
+- [Name the finish line and the stops](#name-the-finish-line-and-the-stops)
 - [Use modal words consistently](#use-modal-words-consistently)
 - [Keep the structure readable](#keep-the-structure-readable)
 - [Replace confidence language with proof](#replace-confidence-language-with-proof)
@@ -103,6 +104,27 @@ slots.
 - State the positive case directly. Avoid stacked negatives and exceptions to
   exceptions.
 
+## Name the finish line and the stops
+
+- State the result that ends the task as something the agent can observe: the
+  tests that pass, the file that exists, the old code that is deleted.
+- Name the conditions that make the agent stop and ask: a decision it cannot
+  make from the code or the plan, and each destructive action that needs
+  approval, such as deleting data, force-pushing, or changing anything outside
+  the repository. Outside those conditions, tell the agent to keep going
+  without checking in.
+- Do not tell the agent how or how much to think. Delete *think carefully*,
+  *think step by step*, and *take your time*: current reasoning models choose
+  their own reasoning depth, and these lines delay the reply. Spend the words on
+  the outcome and the finish line.
+- To exclude unwanted output, list the specific patterns to leave out. *Avoid a
+  generic look* lets the agent swap one default for another; *no cream
+  backgrounds, pill buttons, or monospace body text* names what to remove.
+- Ask for a short explanation of a decision, such as *explain in three
+  sentences why you chose this approach*, not a reproduction of the agent's
+  internal reasoning. A model can flag a request to reproduce its reasoning and
+  hand the conversation to an older model.
+
 ## Use modal words consistently
 
 | Word | Use only for |
@@ -166,6 +188,7 @@ reviewer. Verify that:
 - Each choice or quantifier has explicit Boolean scope.
 - Each modal word has only its declared force.
 - Each sequence can be executed in one order.
+- Each task names its finish line and the conditions that stop the agent.
 - Each success claim has observable evidence.
 - No rewrite changed a technical requirement.
 

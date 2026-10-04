@@ -48,6 +48,22 @@ skips it.
 - Ask the user any clarifying questions **now** — scope ambiguities are cheapest
   to resolve before any code exists.
 
+The run is finished when every queued TPP is in `_done/` with its commit and the
+roadmap's status section matches.
+
+## When to stop
+
+Move from one step, and one TPP, to the next without checking in. Put status
+notes in the same message as your next action. Stop the queue and ask the user
+only when:
+
+- a question would change what the TPP builds (steps 1 and 3);
+- the review gate ends with a batch that the two reviewers did not both land,
+  because its four passes are spent or you accepted a `DISCARD`;
+- ground truth contradicts the TPP;
+- the next action deletes data, force-pushes, or changes anything outside the
+  repository.
+
 ## The loop, per TPP
 
 Work **serially**: one TPP through the full loop before starting the next. Only parallelize TPPs within a wave when their file sets are provably disjoint _and_ neither depends on the other's decisions — review gates stay per-TPP either way.
@@ -104,7 +120,9 @@ Move the TPP to `_done/`, update the roadmap's status section, and make **one co
 - **Run the review gate by default.** Passing tests do not replace review;
   explicit user direction can change or end the review workflow.
 - **Rebuild before testing built artifacts.** CLI/dist tests against a stale build silently test old code.
-- **Report honestly.** The per-TPP summary to the user lists: what shipped, findings accepted/vetoed (with one-line reasons), open questions, and anything you diverged on.
+- **Report honestly.** The per-TPP summary to the user starts with what needs
+  the user — open questions and anything you diverged on — then lists what
+  shipped and the findings accepted/vetoed (with one-line reasons).
 
 ## Adapting for your project
 

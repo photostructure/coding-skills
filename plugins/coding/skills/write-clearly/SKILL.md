@@ -60,8 +60,8 @@ the author's recognizable voice.
 When revising instructions, plans, specifications, review findings, handoffs,
 or other text that an agent must execute literally, read and apply
 [the agent-instruction standard](references/agent-instructions.md) after step 4.
-It prioritizes explicit scope, conditions, logic, actions, and evidence over
-brevity or varied wording.
+It prioritizes explicit scope, conditions, logic, actions, finish lines, and
+evidence over brevity or varied wording.
 
 If missing facts prevent an executable rewrite, identify the blocker and ask
 focused questions. Do not silently choose an interpretation or turn common best

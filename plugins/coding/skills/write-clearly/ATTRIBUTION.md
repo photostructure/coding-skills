@@ -25,6 +25,10 @@ This skill synthesizes and paraphrases ideas from:
   ["GOV.UK content principles"](https://www.gov.uk/government/publications/govuk-content-principles-conventions-and-research-background/govuk-content-principles-conventions-and-research-background):
   plain English for specialists, contextual use of technical terms and passive
   voice, and front-loaded web content.
+- Claude blog, ["Getting the most out of Opus 5.5"](https://claude.dev/blog/getting-the-most-out-of-opus-5-5/)
+  (2026): naming the finish line and stop conditions, dropping instructions
+  about how to think, listing specific patterns to exclude, and asking for a
+  short explanation instead of the model's reasoning.
 
 Contains public sector information licensed under the
 [Open Government Licence v3.0](https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/).

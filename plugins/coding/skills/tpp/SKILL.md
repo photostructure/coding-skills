@@ -1,6 +1,6 @@
 ---
 name: tpp
-description: Work on a Technical Project Plan — read the plan, identify the current phase, do that phase's work, and update the plan with discoveries. Use when starting or resuming multi-session work tracked in a plan file.
+description: Work a Technical Project Plan to completion — read the plan, start from its current phase, work through its tasks until their acceptance tests pass, and update the plan as each task lands. Use when starting or resuming multi-session work tracked in a plan file.
 metadata:
   website: "https://photostructure.com/coding/claude-code-tpp/"
 ---
@@ -13,8 +13,9 @@ A Technical Project Plan (TPP) is a living handoff document: it carries research
 design decisions, failed approaches, and next steps across sessions, so the next
 session (or the next engineer) continues instead of restarting.
 
-Make progress on the referenced TPP. Determine the current phase and take
-appropriate action.
+Work the referenced TPP to completion: start from its current phase and keep
+going until every task's acceptance test passes and every box under **Current
+phase** is checked.
 
 ## Required Reading First
 
@@ -29,10 +30,19 @@ Before any work, you MUST read:
 1. Read the referenced TPP. It will live in `_todo/`, in a priority folder
    (`_active/`, `_p1/`…`_p4/`), or in a documented feature integration queue
    matching `_feat-<name>/` if this project uses them.
-2. Identify the current phase.
-3. Do the work for that phase.
-4. Update the TPP with progress and discoveries — gotchas, rejected approaches,
-   and the _why_ behind decisions, not a transcript.
+2. Identify the current phase from its `Next:` line and unchecked boxes.
+3. Work through the open tasks and phases without checking in. Put status notes
+   in the same message as your next action.
+4. As each task's acceptance test passes, tick it in the TPP and record
+   discoveries — gotchas, rejected approaches, and the _why_ behind decisions,
+   not a transcript.
+
+Stop and ask the user only when:
+
+- a decision is open that neither the TPP nor the code settles;
+- the TPP contradicts what you find in the code;
+- the next action deletes data, force-pushes, or changes anything outside the
+  repository.
 
 When context runs low before the work is done, invoke the `handoff` skill rather than
 letting the session end silently. When the TPP is complete, move it to `_done/`.
