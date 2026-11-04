@@ -177,8 +177,8 @@ python3 "<this-skill>/scripts/run_with_idle_timeout.py" \
   --plugin-dir "<coding-plugin-root>" \
   --permission-mode auto \
   --disallowedTools Edit Write NotebookEdit \
-  --model opus \
-  --effort xhigh \
+  --model claude-opus-5-5 \
+  --effort high \
   --output-format stream-json --verbose \
   > "<events-file>"
 ```
@@ -208,7 +208,7 @@ Begin the prompt file with `/coding:review`, including for a staged diff. The
 directly. An unavailable slash command is a plugin-loading failure even when
 Claude exits 0.
 
-Use xhigh effort for both reviewers. Small batches keep each review short.
+Run the Claude reviewer on Opus 5.5 at high effort and the Codex reviewer at xhigh. Small batches keep each review short.
 
 Claude.ai OAuth may need to rewrite its credential store when refreshing an
 expired token. On Codex hosts whose filesystem sandbox can read but not write
@@ -408,8 +408,8 @@ python3 "<this-skill>/scripts/run_with_idle_timeout.py" \
   --plugin-dir "<coding-plugin-root>" \
   --permission-mode auto \
   --disallowedTools Edit Write NotebookEdit \
-  --model opus \
-  --effort xhigh \
+  --model claude-opus-5-5 \
+  --effort high \
   --output-format stream-json --verbose \
   > "<next-events-file>"
 ```
