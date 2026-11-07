@@ -110,12 +110,14 @@ Read the new code yourself while the reviewers run.
 ### 5. Record the verdicts
 
 Report every finding — accepted **and** vetoed — in the per-TPP summary to the
-user, with the evidence for each verdict and which model raised it. In the TPP,
-record only what TPP-GUIDE's **Keeping TPPs useful** section lets a plan carry.
+user, with the evidence for each verdict and which model raised it. Record the
+review in the TPP's **Working log**, as TPP-GUIDE's **Keeping TPPs useful**
+section describes; step 6 moves what lasts out of it.
 
 ### 6. Close out
 
-Move the TPP to `_done/`, update the roadmap's status section, and make **one coherent commit per TPP** (implementation + tests + TPP move together), following the repo's commit conventions. Then start the next TPP.
+Move what lasts out of the TPP's Working log as TPP-GUIDE describes, delete the
+log, move the TPP to `_done/`, update the roadmap's status section, and make **one coherent commit per TPP** (implementation + tests + TPP move together), following the repo's commit conventions. Then start the next TPP.
 
 ## Guidelines
 

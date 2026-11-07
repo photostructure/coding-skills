@@ -35,8 +35,9 @@ Before any work, you MUST read:
    in the same message as your next action.
 4. As each task's acceptance test passes, tick it in the TPP and record
    discoveries — gotchas, rejected approaches, and the _why_ behind decisions,
-   not a transcript. Leave out the session records that the guide's **Keeping
-   TPPs useful** section excludes.
+   not a transcript. Session records, including missteps and reviews, go only
+   in the TPP's **Working log**, as the guide's **Keeping TPPs useful** section
+   describes.
 
 Stop and ask the user only when:
 
@@ -46,7 +47,9 @@ Stop and ask the user only when:
   repository.
 
 When context runs low before the work is done, invoke the `handoff` skill rather than
-letting the session end silently. When the TPP is complete, move it to `_done/`.
+letting the session end silently. When the TPP is complete, move what lasts out
+of its Working log as the guide describes, delete the log, and move the TPP to
+`_done/`.
 
 ## Adapting for your project
 

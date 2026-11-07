@@ -177,7 +177,7 @@ Detailed context about the problem, under 20 lines.
 ## Lore
 
 - Non-obvious details that will help the next engineer
-- Prior gotchas that tripped up previous sessions
+- Gotchas in the code or tools that would trip up the next engineer
 - Relevant functions, classes, constraints, and historical context
 
 ## Solutions
@@ -200,6 +200,18 @@ Each task names its deliverable and the **acceptance test that proves it** — t
 test file and case, or the exact command to run. A runnable test is a shorter
 and stricter spec than a paragraph of implementation notes. Add prose only for
 integration points a test can't express.
+
+## Working log
+
+Delete this section when the plan is complete. One entry per session, newest
+last.
+
+- 2026-11-06, `<cli> 0f3a9c2e-…`, checkout `~/src/worktrees/tag-gallery`.
+  Misstep: assumed `tagIds` was sorted; it is insertion-ordered, caught by
+  `npm test -- tag-gallery`. Review batch 1 (`src/tags.ts`), 2 passes,
+  reviewers `<cli-a> 019a…` and `<cli-b> 5c1d…`: R123-A accepted (empty tag
+  list threw), R456-B vetoed (`dedupe` already runs upstream,
+  `src/tags.ts:40`).
 ```
 
 ## Keeping TPPs useful
@@ -218,23 +230,27 @@ that the number is off by one instead of on the work. Record the command that
 produces the number, not the number. `npm test -- tag-gallery` passes is a
 durable claim; "36 tests pass" is a hostage to the next commit.
 
-**Leave session records out.** A TPP records outcomes: what is true now, what
-was decided and why, what failed and why, and what remains. Do not write these
-into a TPP:
+**Keep session records in the Working log, and only until the plan is done.**
+While the plan is unfinished, its **Working log** lets the next session see
+what earlier sessions tried, so it does not repeat their missteps. Each session
+that works the plan appends one entry, at handoff if not sooner, with:
 
-- review bookkeeping: verdict tables, finding IDs, review pass counts, and
-  reviewer session IDs;
-- paths in a temporary or scratch directory, which get deleted;
-- session IDs, and accounts of what each session did in what order.
+- its CLI and session ID, so the next session can open that transcript;
+- its missteps: what looked right, why it was wrong, and how it was caught;
+- the checkout that holds uncommitted changes, if any, which the newest entry
+  that names one supersedes;
+- for each review it ran: the batches and pass counts, each reviewer's CLI and
+  session ID, and each finding by ID with its accept, veto, or open state and
+  one line of evidence.
 
-One exception: while work is unfinished, the TPP names the checkout that holds
-its uncommitted changes and, for a review still in progress, each open batch's
-files, pass count, each reviewer's CLI and session ID, and each finding of the
-current pass by ID with its accept, veto, or open state and one line of
-evidence, because the next session needs them to resume. Delete the review lines when the review ends,
-and the checkout line in the commit that includes the work.
+Keep session records out of the plan's other sections, and keep paths in a
+temporary or scratch directory out of the plan entirely, because they get
+deleted.
 
-Record each where it lasts instead:
+The finished plan records outcomes: what is true, what was decided and why,
+what failed and why. The session that completes the plan moves what lasts out
+of the Working log, then deletes the log in the commit that marks the plan done
+or moves it to `_done/`. Record each where it lasts:
 
 - The reason for a change goes in its commit message.
 - A check that someone must rerun becomes a committed test or script, which
@@ -245,6 +261,7 @@ Record each where it lasts instead:
   `second-opinion` reports it), and the base commit the reviewed diff applies
   to. Each vetoed finding gets one line under **Lore**: the claim, and the
   evidence that refutes it.
+- A misstep a later engineer could repeat gets one line under **Lore**.
 
 The high-value sections are **Lore** and the failed approaches under
 **Solutions**: gotchas, dead ends, and the *why* behind decisions are exactly
@@ -307,8 +324,10 @@ When context is running low or the session is ending:
 2. Mark completed tasks.
 3. Update the current phase.
 4. Add discoveries, gotchas, and failed approaches.
-5. Clarify exactly what remains.
-6. Trim redundancy before saving.
+5. Append this session's **Working log** entry, including its missteps and any
+   review still in progress.
+6. Clarify exactly what remains.
+7. Trim redundancy before saving.
 
 The next session should be able to invoke the `tpp` skill with the plan path, read the
 TPP, and continue without asking what happened last time.

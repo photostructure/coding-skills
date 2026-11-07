@@ -493,16 +493,14 @@ complete improved message. For a split, identify every independently committable
 group and give each group's complete message. These notes have no severity and
 cannot change the verdict.
 
-Keep the ledger, batch lines, pass counts, and reviewer session IDs out of any
-plan document, such as a TPP, that tracks this work; the plan's own guide says
-what it records about the review. If that guide does not say what a plan
-records about the review, add only one line per vetoed finding (the claim and
-the evidence that refutes it), the final verdict with each missing slot, and
-the base commit the reviewed diff applies to. A handoff before the review ends
-is the one exception: the plan carries each open batch's files, pass count,
-each reviewer's CLI and session ID, and each finding of the current pass by ID
-with its accept, veto, or open state and one line of evidence, so the next
-session can resume step 6. The session that ends the review deletes them.
+A plan document that tracks this work, such as a TPP, records the review as its
+own guide says. If that guide says nothing, then while the plan is unfinished
+it carries each batch's files and pass count, each reviewer's CLI and session
+ID, and each finding by ID with its accept, veto, or open state and one line of
+evidence, so a later session can resume step 6 and see what was already
+vetoed. When the plan completes, it keeps only one line per vetoed finding (the
+claim and the evidence that refutes it), the final verdict with each missing
+slot, and the base commit the reviewed diff applies to.
 
 ## Scratch files
 
