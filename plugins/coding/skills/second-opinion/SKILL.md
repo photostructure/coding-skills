@@ -305,8 +305,15 @@ marks that model's slot as missing.
 
 First set aside every concern that is only about the commit message, or about
 grouping, splitting, or ordering otherwise-valid content. Those are commit
-notes, not findings: no severity, no accept, no veto, no pinning test. If they
-are all that any review raised, the verdict is `LAND`.
+notes, not findings: no severity, no accept, no veto, no pinning test. Set aside
+each review's `Minor` section the same way, without telling the reviewers: fix
+an item only when it is cheap and another pass is already due, and otherwise
+leave it. A Minor item that meets the review method's bar for a finding is a
+finding; settle it like one. If commit notes and Minor items are all that any
+review raised, the verdict is `LAND`.
+
+Hold your own read to the same reporting bar: what the review method would put
+under `Minor` or drop as arcana is not a finding when you raise it either.
 
 The verdict does not decide what you adjudicate. A `LAND` carrying findings
 still carries findings: settle every one. An empty findings list ends the work,
@@ -451,14 +458,16 @@ fixes or disputed findings, finish the authorized fixes and tests, then report
 the cap and what is still unsettled; do not describe unreviewed fixes as a clean
 pass.
 Skip the loop entirely when the first pass raised nothing substantive and no
-code changed.
+code changed. Minor items never cause a pass: step 4 fixes them only when a
+finding already requires one, and that pass reviews them with everything else.
 
 ## 7. Report the verdicts
 
 Summarize for the user (and for whatever plan or PR document tracks this work):
 every substantive finding, accepted **and** vetoed, with one-line evidence for
-each verdict, and which model raised it. Record vetoes especially — the next
-session will rediscover the same "bug" and must not re-litigate it.
+each verdict, and which model raised it. Leave Minor items out. Record vetoes
+especially — the next session will rediscover the same "bug" and must not
+re-litigate it.
 
 Begin with one top-level `Verdict: LAND | REVISE | DISCARD` line, then one line
 per review batch with its files, its pass count, and each model's final verdict:

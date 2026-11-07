@@ -118,6 +118,20 @@ Do not report style preferences, speculative future risks, feature requests,
 problems in unchanged code that the change did not cause, or diagnostics a
 compiler, typechecker, or linter already reports.
 
+Do not report arcana, which costs the author a fix and you another pass without
+changing what anyone observes:
+
+- Wording in plans, TPPs, handoffs, release notes, documentation, or comments,
+  unless a reader who follows the text as written would do the wrong thing: run
+  a wrong command, rely on behavior the code does not have, or skip a required
+  step. That is a defect; report it with the wrong action as its scenario.
+- An edge case whose triggering input or sequence you cannot attribute to a
+  real caller, user, or environment.
+- A request to add a guard, check, or fallback against an input that cannot
+  reach the code. A guard the change itself adds against such an input is an
+  Unexplained change; report it.
+- Requests for consistency or terminology changes in code that works.
+
 Do not suggest a change that contradicts the project's stated policy in
 `AGENTS.md`, `CLAUDE.md`, or design documents read during scoping. Such a
 suggestion is a bug in the review, not in the code.
@@ -129,17 +143,25 @@ deliberately. Report it only if you can prove the suppression itself is wrong.
 ## Return the report
 
 This is the second filter, and the only place severity decides anything. Of the
-candidates that survived verification, report every defect and every
-Unexplained change; report a quality
-observation only when it is High or Medium impact — one that would change what
-the author ships. Drop unlikely corner cases.
+candidates that survived verification, report as findings every defect a user,
+caller, operator, or build would observe, and every Unexplained change. Also
+report as findings a violation of a rule the project states, dead code, and a
+test gap that would let a realistic regression pass. Drop unlikely corner
+cases.
+
+Put every other survivor — a misleading name, a weak error message or log
+line, a small test gap around working code, a small inefficiency — in a
+`Minor` section after the findings, one line each
+with its `file:line`. Minor items get no ID and no priority, are not tracked
+across passes, and never change the verdict. The author may fix them or ignore
+them without answering you. Omit the section when it would be empty.
 
 Begin with exactly one top-level verdict:
 
 `Verdict: LAND | REVISE | DISCARD`
 
-- **LAND** — the content is worth landing as it stands. Quality observations and
-  commit notes may still ride along.
+- **LAND** — the content is worth landing as it stands. Minor items and commit
+  notes may still ride along.
 - **REVISE** — the change is worth landing once the reported defects are fixed.
   Any defect you would want fixed before landing makes the verdict `REVISE`; do
   not return `LAND` with defects attached. An Unexplained change also makes the
@@ -160,8 +182,9 @@ For an Unexplained change, **Problem** names the question you could not answer,
 **Proof** lists what you read and why it did not answer the question, and
 **Solution** is the question the author must answer.
 
-Require proof for every finding. If nothing survives verification, return
-`No issues found.` after the verdict. Do not pad the report.
+Require proof for every finding. If no finding survives verification, write
+`No issues found.` after the verdict; a `Minor` section may still follow. Do
+not pad the report.
 
 After all findings, add a brief `Commit notes` section only when the commit
 message or grouping warrants a change. Each note must state the recommendation
@@ -200,7 +223,8 @@ Report every prior finding as resolved, still present, or disputed, with a brief
 reason, and keep resolved findings separate from current findings. Retain each
 existing finding's ID and give new issues the next unused suffix; never recycle
 an ID for a different issue. Dispute a veto when its evidence is insufficient,
-and say what evidence would settle it.
+and say what evidence would settle it. List a Minor item only on the first pass
+that notices it.
 
 An Unexplained change is resolved when its answer is in the code, tests,
 documentation, or commit message, including an answer the author shows was
