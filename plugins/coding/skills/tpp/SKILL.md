@@ -35,7 +35,8 @@ Before any work, you MUST read:
    in the same message as your next action.
 4. As each task's acceptance test passes, tick it in the TPP and record
    discoveries — gotchas, rejected approaches, and the _why_ behind decisions,
-   not a transcript.
+   not a transcript. Leave out the session records that the guide's **Keeping
+   TPPs useful** section excludes.
 
 Stop and ask the user only when:
 

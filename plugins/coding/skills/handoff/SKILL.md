@@ -26,7 +26,8 @@ Before any work, you MUST read:
 Apply the guide's **Handoff rules** and **Keeping TPPs useful** sections to the
 active TPP. What this session learned that the repository does not already
 record — gotchas, dead ends and *why* they failed, the reasoning behind
-decisions — is the part that must end up in the file.
+decisions — is the part that must end up in the file. Leave out the session
+records that **Keeping TPPs useful** excludes; it says where each goes instead.
 
 The bar: the next session should be able to invoke the `tpp` skill with the plan
 path and continue without asking what happened last time.

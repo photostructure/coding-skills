@@ -265,9 +265,10 @@ background and poll each job until it exits:
 
 - **0** — read the review and record the CLI, repository, batch, session ID,
   pass count, and finding IDs in your task notes. Keep that handle through fixes
-  and handoffs; never select a reviewer with `--last` or `--continue`, which can
-  attach to unrelated work. A missing session ID does not invalidate the pass,
-  but it forces the fresh-session fallback in step 6.
+  and handoffs (step 7 says what a plan carries across one); never select a
+  reviewer with `--last` or `--continue`, which can attach to unrelated work. A
+  missing session ID does not invalidate the pass, but it forces the
+  fresh-session fallback in step 6.
 - **124 with the supervisor's `idle timeout:` diagnostic** — the reviewer went
   silent for 15 minutes. Discard the partial review, say so, and finish your own
   pass.
@@ -463,11 +464,9 @@ finding already requires one, and that pass reviews them with everything else.
 
 ## 7. Report the verdicts
 
-Summarize for the user (and for whatever plan or PR document tracks this work):
-every substantive finding, accepted **and** vetoed, with one-line evidence for
-each verdict, and which model raised it. Leave Minor items out. Record vetoes
-especially — the next session will rediscover the same "bug" and must not
-re-litigate it.
+Summarize for the user (and for the PR description, when a PR tracks this
+work): every substantive finding, accepted **and** vetoed, with one-line
+evidence for each verdict, and which model raised it. Leave Minor items out.
 
 Begin with one top-level `Verdict: LAND | REVISE | DISCARD` line, then one line
 per review batch with its files, its pass count, and each model's final verdict:
@@ -493,6 +492,17 @@ grouping improvement. Name the model, state the specific reason, and give the
 complete improved message. For a split, identify every independently committable
 group and give each group's complete message. These notes have no severity and
 cannot change the verdict.
+
+Keep the ledger, batch lines, pass counts, and reviewer session IDs out of any
+plan document, such as a TPP, that tracks this work; the plan's own guide says
+what it records about the review. If that guide does not say what a plan
+records about the review, add only one line per vetoed finding (the claim and
+the evidence that refutes it), the final verdict with each missing slot, and
+the base commit the reviewed diff applies to. A handoff before the review ends
+is the one exception: the plan carries each open batch's files, pass count,
+each reviewer's CLI and session ID, and each finding of the current pass by ID
+with its accept, veto, or open state and one line of evidence, so the next
+session can resume step 6. The session that ends the review deletes them.
 
 ## Scratch files
 
@@ -521,5 +531,5 @@ dies mid-link — costing far more to diagnose than the copy ever saved.
   commands.
 - **Callers welcome**: other skills (`gitplan`, `tpp-orchestrate`) reference this
   file as their review gate. Keep the gate generic here; put workflow-specific
-  bookkeeping (where verdicts get recorded, commit conventions) in the calling
-  skill.
+  bookkeeping (commit conventions, where the report goes) in the calling skill.
+  What a plan document records about the review belongs to that plan's guide.

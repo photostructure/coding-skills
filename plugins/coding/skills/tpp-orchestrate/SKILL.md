@@ -109,7 +109,9 @@ Read the new code yourself while the reviewers run.
 
 ### 5. Record the verdicts
 
-Add a "Post-review fixes" section to the TPP listing every finding — accepted **and** vetoed — with the evidence for each verdict and which model raised it. Vetoes especially: the next session will see the same "bug" and must not re-litigate it.
+Report every finding — accepted **and** vetoed — in the per-TPP summary to the
+user, with the evidence for each verdict and which model raised it. In the TPP,
+record only what TPP-GUIDE's **Keeping TPPs useful** section lets a plan carry.
 
 ### 6. Close out
 

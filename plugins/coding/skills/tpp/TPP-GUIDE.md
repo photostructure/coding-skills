@@ -218,6 +218,34 @@ that the number is off by one instead of on the work. Record the command that
 produces the number, not the number. `npm test -- tag-gallery` passes is a
 durable claim; "36 tests pass" is a hostage to the next commit.
 
+**Leave session records out.** A TPP records outcomes: what is true now, what
+was decided and why, what failed and why, and what remains. Do not write these
+into a TPP:
+
+- review bookkeeping: verdict tables, finding IDs, review pass counts, and
+  reviewer session IDs;
+- paths in a temporary or scratch directory, which get deleted;
+- session IDs, and accounts of what each session did in what order.
+
+One exception: while work is unfinished, the TPP names the checkout that holds
+its uncommitted changes and, for a review still in progress, each open batch's
+files, pass count, each reviewer's CLI and session ID, and each finding of the
+current pass by ID with its accept, veto, or open state and one line of
+evidence, because the next session needs them to resume. Delete the review lines when the review ends,
+and the checkout line in the commit that includes the work.
+
+Record each where it lasts instead:
+
+- The reason for a change goes in its commit message.
+- A check that someone must rerun becomes a committed test or script, which
+  the TPP names with the command that runs it. A check that cannot be automated
+  stays in the TPP as manual steps.
+- Review verdicts go in the report to the user. The TPP's **Reviewed** box gets
+  the final verdict, each model whose slot is missing and why (as
+  `second-opinion` reports it), and the base commit the reviewed diff applies
+  to. Each vetoed finding gets one line under **Lore**: the claim, and the
+  evidence that refutes it.
+
 The high-value sections are **Lore** and the failed approaches under
 **Solutions**: gotchas, dead ends, and the *why* behind decisions are exactly
 what a fresh session cannot recover from the repository. Everything else is
