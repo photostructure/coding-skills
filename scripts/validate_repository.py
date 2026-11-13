@@ -505,6 +505,39 @@ def validate_portability_tokens(validation: Validation) -> None:
         is None,
         f"{second_opinion_relative}: invokes the built-in codex review subcommand",
     )
+    # A reviewer launched without its model flag runs on whatever model the
+    # host's config or session holds; on 2026-11-12 that was gpt-6-astra.
+    reviewer_flags = {
+        "codex exec": ("-m gpt-6.1-sol", "-c 'model_reasoning_effort=\"xhigh\"'"),
+        'claude -p "{prompt}"': ("--model claude-opus-5-5", "--effort high"),
+    }
+    # Drop comment lines so a commented-out flag does not count as present.
+    blocks = [
+        re.sub(r"(?m)^\s*#.*\n?", "", block)
+        for block in re.findall(r"(?ms)^```bash\n(.*?)^```", second_opinion_content)
+    ]
+    for command, flags in reviewer_flags.items():
+        launches = [
+            block
+            for block in blocks
+            if re.search(r"(?m)^\s*" + re.escape(command) + r"(?:\s|\\|$)", block)
+        ]
+        validation.check(
+            len(launches) == 2,
+            f"{second_opinion_relative}: expected 2 {command!r} blocks "
+            f"(launch and resume), found {len(launches)}",
+        )
+        for block in launches:
+            for flag in flags:
+                validation.check(
+                    flag in block,
+                    f"{second_opinion_relative}: a {command!r} block lacks {flag!r}",
+                )
+    for token in ('`model: "gpt-6.1-sol"`', '`reasoning_effort: "xhigh"`'):
+        validation.check(
+            token in second_opinion_content,
+            f"{second_opinion_relative}: spawn_agent rule lacks {token!r}",
+        )
 
     for relative in (
         second_opinion_relative,
