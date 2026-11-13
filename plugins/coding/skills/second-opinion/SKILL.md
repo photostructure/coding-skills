@@ -130,6 +130,7 @@ python3 "<this-skill>/scripts/run_with_idle_timeout.py" \
   codex exec \
   -C "<target-repository>" \
   --sandbox workspace-write \
+  -m gpt-6.1-sol \
   -c 'model_reasoning_effort="xhigh"' \
   --json \
   --output-last-message "<review-file>" \
@@ -208,7 +209,16 @@ Begin the prompt file with `/coding:review`, including for a staged diff. The
 directly. An unavailable slash command is a plugin-loading failure even when
 Claude exits 0.
 
-Run the Claude reviewer on Opus 5.5 at high effort and the Codex reviewer at xhigh. Small batches keep each review short.
+**You MUST set the model and effort on every reviewer launch and every resume.**
+Pass `-m gpt-6.1-sol -c 'model_reasoning_effort="xhigh"'` to every `codex exec`
+command and `--model claude-opus-5-5 --effort high` to every `claude -p`
+command, exactly as shown. Never drop or change these flags when you rewrite,
+retry, shorten, or resume a command. Without `-m`, Codex runs whatever `model`
+the user's Codex config holds at that moment, which the Codex app can change;
+review runs that omitted it ran on `gpt-6-astra` and spent most of a week's
+Codex quota. If a CLI rejects the model name, report the error and mark that
+model's slot missing; never rerun without the flag or with another model.
+Small batches keep each review short.
 
 Claude.ai OAuth may need to rewrite its credential store when refreshing an
 expired token. On Codex hosts whose filesystem sandbox can read but not write
@@ -431,6 +441,7 @@ python3 "<this-skill>/scripts/run_with_idle_timeout.py" \
   -C "<target-repository>" \
   --sandbox workspace-write \
   resume \
+  -m gpt-6.1-sol \
   -c 'model_reasoning_effort="xhigh"' \
   --json \
   --output-last-message "<next-review-file>" \
