@@ -218,7 +218,10 @@ the user's Codex config holds at that moment, which the Codex app can change;
 review runs that omitted it ran on `gpt-6-astra` and spent most of a week's
 Codex quota. If a CLI rejects the model name, report the error and mark that
 model's slot missing; never rerun without the flag or with another model.
-Small batches keep each review short.
+On a Codex host, a reviewer you start with `spawn_agent` instead of a CLI, such
+as the fallback below, MUST pass `model: "gpt-6.1-sol"` and
+`reasoning_effort: "xhigh"`; without them it inherits this session's model and
+effort, whatever those are. Small batches keep each review short.
 
 Claude.ai OAuth may need to rewrite its credential store when refreshing an
 expired token. On Codex hosts whose filesystem sandbox can read but not write
