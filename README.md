@@ -24,7 +24,7 @@ and publishing preparation.
 | coding | `replan` | Iteratively critique alternatives before settling a complex design. |
 | coding | `review` | Review code and report only issues proven through the full code path. |
 | coding | `review-staged` | Apply the same proof gate to the staged diff before proposing a commit. |
-| coding | `second-opinion` | Have fresh Codex and Claude reviewers review small batches, adjudicate each finding with evidence, then re-review. |
+| coding | `second-opinion` | Have fresh Codex and Claude reviewers review the complete change, adjudicate each finding with evidence, then re-review. |
 | coding | `gitplan` | Untangle a mixed working tree into coherent Conventional Commits. |
 | coding | `stage` | Stage only the hunks attributable to the current body of work. |
 | coding | `find` | Find the Claude Code or Codex session that wrote an uncommitted change, and print the command that resumes it. |
@@ -223,13 +223,15 @@ context. Setup-only plugins do not invent reviewer agents.
 job is to shell out to both vendors' CLIs (plain `codex exec` with a
 `$coding:review` prompt, `claude -p` with a `/coding:review` prompt), so it
 names both hosts. The validator allows those exact review invocations in that
-one file and applies every other portability rule to it. The caller splits the
-change into batches of about 200 weighted lines, and each batch gets a fresh
-reviewer from each CLI; when a CLI is missing or unauthenticated, a subagent
-reviews in its place, and the report marks that model's verdict as missing. Each reviewer runs `review` and returns
+one file and applies every other portability rule to it. Both fresh reviewers
+receive the complete requested scope, without line-count or reading-time
+limits. When a CLI is missing or unauthenticated, a subagent reviews in its
+place, and the report marks that model's verdict as missing. Each reviewer
+runs `review` and returns
 its findings to the calling agent, which adjudicates them and resumes those
 same reviewer sessions with the results — same finding IDs, evidence for every
-accept and veto — until both reviewers land the batch or four passes are spent.
+accept and veto — until both reviewers land the current scope, a `DISCARD` is accepted,
+or four passes are spent.
 
 ## Adapting the workflows
 

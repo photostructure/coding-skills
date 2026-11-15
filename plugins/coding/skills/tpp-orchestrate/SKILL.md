@@ -58,7 +58,7 @@ notes in the same message as your next action. Stop the queue and ask the user
 only when:
 
 - a question would change what the TPP builds (steps 1 and 3);
-- the review gate ends with a batch that the two reviewers did not both land,
+- the review gate ends without both reviewers landing the current scope,
   because its four passes are spent or you accepted a `DISCARD`;
 - ground truth contradicts the TPP;
 - the next action deletes data, force-pushes, or changes anything outside the

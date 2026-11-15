@@ -208,7 +208,7 @@ last.
 
 - 2026-11-06, `<cli> 0f3a9c2e-…`, checkout `~/src/worktrees/tag-gallery`.
   Misstep: assumed `tagIds` was sorted; it is insertion-ordered, caught by
-  `npm test -- tag-gallery`. Review batch 1 (`src/tags.ts`), 2 passes,
+  `npm test -- tag-gallery`. Reviewed `src/tags.ts`, 2 passes,
   reviewers `<cli-a> 019a…` and `<cli-b> 5c1d…`: R123-A accepted (empty tag
   list threw), R456-B vetoed (`dedupe` already runs upstream,
   `src/tags.ts:40`).
@@ -239,7 +239,7 @@ that works the plan appends one entry, at handoff if not sooner, with:
 - its missteps: what looked right, why it was wrong, and how it was caught;
 - the checkout that holds uncommitted changes, if any, which the newest entry
   that names one supersedes;
-- for each review it ran: the batches and pass counts, each reviewer's CLI and
+- for each review it ran: the reviewed scope and pass count, each reviewer's CLI and
   session ID, and each finding by ID with its accept, veto, or open state and
   one line of evidence.
 

@@ -45,14 +45,14 @@ If the repository has a layered structure (e.g. shared utilities → core → fe
 ### Phase 2: Stage, Review, and Commit (per theme)
 
 1. Stage only files belonging to the selected theme using `git add <files>`, including any related docs/plans decided in Phase 1.
-2. **Kick off the second-opinion reviewers on the staged diff, in the background if the host supports it** — steps 2-3 of [`../second-opinion/SKILL.md`](../second-opinion/SKILL.md). Start them first so they run while you review. The reviewers have no staged-only scope, so name the staged file list in the prompt: "review these staged files: `<list>`. The other uncommitted changes belong to later commits; read them where they interact with the staged code. Report any defect the staged diff causes, including in callers or dependencies outside it."
+2. **Kick off the second-opinion reviewers on the staged diff, in the background if the host supports it** — step 2 of [`../second-opinion/SKILL.md`](../second-opinion/SKILL.md). Start them first so they run while you review. The reviewers have no staged-only scope, so name the staged file list in the prompt: "review these staged files: `<list>`. The other uncommitted changes belong to later commits; read them where they interact with the staged code. Report any defect the staged diff causes, including in callers or dependencies outside it."
 3. Review the staged changes yourself using the `review-staged` skill. Use a capable model — reviews are important.
-4. Collect the second opinions, then vet every finding from every review against ground truth and report the result — steps 4-7 of the gate. Accept and veto only with evidence.
+4. Collect the second opinions, then vet every finding from every review against ground truth and report the result — steps 3-6 of the gate. Accept and veto only with evidence.
 5. If issues are accepted:
    - Present them clearly with priority, problem, and proposed fix.
    - Apply fixes incrementally, re-staging as needed.
    - Re-review until clean.
-6. Present the gate's report, including its per-batch pass counts and model verdicts, with the proposed commit message, and ask for approval if commit authorization is still missing. When the user approves, commit immediately — no new review or second confirmation.
+6. Present the gate's report, including its pass count and model verdicts, with the proposed commit message, and ask for approval if commit authorization is still missing. When the user approves, commit immediately — no new review or second confirmation.
    - **Commit messages drive the changelog.** The body should describe user-facing behavior changes (what users will see/experience), not just implementation details. Lead with the "what changed for users" — implementation notes are secondary.
 
 Skip the second opinion when the user directs you to commit, asks to skip
