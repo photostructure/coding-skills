@@ -29,23 +29,24 @@ cannot inherit the premises you have been working under. Use both.
 
 ## User direction
 
-This review workflow is a default, not a condition the user must satisfy before
-committing. A direct instruction such as "commit" or "approved, commit" takes
-precedence over this skill and callers' review gates. Unless the user also asks
-for review first, return to the commit workflow without starting or resuming a
-review or asking whether to skip it. Apply the same rule during retries and
-re-review loops.
+A direct instruction to commit, or to stop reviewing and finish now (such as
+"just commit" or "hurry up and finish"), takes precedence over this workflow
+and callers' review gates. A request to finish a task does not end its review.
+Unless the user also requests review first, return to the commit workflow
+without asking whether to skip review. This applies during retries and
+re-review too.
 
-The exception is project instructions that require review before every commit.
-In that case a commit instruction for changes that review has not finished on
-since they last changed starts or resumes the review, and only an explicit
-instruction to skip review skips it.
+If project instructions require review before every commit, finish reviewing
+the current changes unless the user explicitly says to skip review.
 
-Do not require a `LAND` verdict, a review transcript, or a claim that another
-reviewer approved the change. If the user says a review already happened,
-accept that as workflow context; attribute it to the user if reporting it.
-Never invent a review result. The user can authorize a commit with review work
-unfinished; report its actual status without making it a new approval gate.
+Once the user approves a diff, do not request approval again, and do not review
+it again after any review the paragraph above requires has finished. After a
+rebase or replay of an approved diff, review only its conflict resolutions.
+
+Accept the user's statement that review already happened; attribute it to them
+when reporting it. Do not demand a transcript or `LAND`, invent a review result,
+or turn unfinished review into a new gate after the user authorizes committing;
+report its actual status instead.
 
 ## 1. List what you changed
 
