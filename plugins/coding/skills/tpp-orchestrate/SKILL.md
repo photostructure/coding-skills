@@ -35,8 +35,12 @@ also requests review first. Use [stage](../stage/SKILL.md) to verify and commit
 the understood scope. Record completed, skipped, and unfinished review work
 accurately; do not mark unfinished implementation or acceptance criteria done.
 An instruction about the current commit does not waive reviews for later TPPs.
-When project instructions require review before every commit, a commit
-instruction for changes that review has not finished on since they last
+An instruction to "commit now" ends review: stop any running reviewers, do not
+start or resume one, and commit, even when project instructions require review
+before every commit. An instruction to "commit when ready" means let any running
+or required review finish first, then commit without asking for approval again.
+Otherwise, when project instructions require review before every commit, a
+commit instruction for changes that review has not finished on since they last
 changed runs the review first, and only an explicit instruction to skip review
 skips it.
 

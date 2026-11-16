@@ -19,8 +19,12 @@ understood scope, use [stage](../stage/SKILL.md) to verify and commit that scope
 Unless the user also requests review first, do not restart planning, invoke
 review skills, wait for a second opinion, or ask for approval again. This rule
 also applies when the instruction arrives during the workflow below.
-When project instructions require review before every commit, a commit
-instruction for changes that review has not finished on since they last
+An instruction to "commit now" ends review: stop any running reviewers, do not
+start or resume one, and commit, even when project instructions require review
+before every commit. An instruction to "commit when ready" means let any running
+or required review finish first, then commit without asking for approval again.
+Otherwise, when project instructions require review before every commit, a
+commit instruction for changes that review has not finished on since they last
 changed runs the review first, and only an explicit instruction to skip review
 skips it.
 
@@ -56,9 +60,10 @@ If the repository has a layered structure (e.g. shared utilities → core → fe
    - **Commit messages drive the changelog.** The body should describe user-facing behavior changes (what users will see/experience), not just implementation details. Lead with the "what changed for users" — implementation notes are secondary.
 
 Skip the second opinion when the user directs you to commit, asks to skip
-review, or the theme is purely mechanical (formatter run, lockfile bump). When
+review, or the theme is purely mechanical (formatter run, lockfile bump), but on
+"commit when ready" let a running second opinion finish first. When
 project instructions require review before every commit, skip it only when the
-user explicitly asks to skip review.
+user says to "commit now" or explicitly asks to skip review.
 Honor an explicit "review, then commit" sequence. Report review status briefly;
 do not turn a skipped review into another permission request.
 

@@ -30,19 +30,15 @@ cannot inherit the premises you have been working under. Use both.
 
 ## User direction
 
-A direct instruction to commit, or to stop reviewing and finish now (such as
-"just commit" or "hurry up and finish"), takes precedence over this workflow
-and callers' review gates. A request to finish a task does not end its review.
-Unless the user also requests review first, return to the commit workflow
-without asking whether to skip review. This applies during retries and
-re-review too.
+"Commit now" and similar instructions to commit now end the review: stop any
+reviewers still running, do not start or resume one, and commit. "Commit when
+ready" and similar instructions mean finish the review first, then commit
+without asking for approval again. The user's wording decides this even when
+project instructions require review before every commit.
 
-If project instructions require review before every commit, finish reviewing
-the current changes unless the user explicitly says to skip review.
-
-Once the user approves a diff, do not request approval again, and do not review
-it again after any review the paragraph above requires has finished. After a
-rebase or replay of an approved diff, review only its conflict resolutions.
+Without either instruction, follow project instructions: if they require
+review before every commit, finish reviewing the current changes unless the
+user explicitly says to skip review.
 
 Accept the user's statement that review already happened; attribute it to them
 when reporting it. Do not demand a transcript or `LAND`, invent a review result,
