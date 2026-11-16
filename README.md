@@ -28,6 +28,7 @@ and publishing preparation.
 | coding | `gitplan` | Untangle a mixed working tree into coherent Conventional Commits. |
 | coding | `stage` | Stage only the hunks attributable to the current body of work. |
 | coding | `find` | Find the Claude Code or Codex session that wrote an uncommitted change, and print the command that resumes it. |
+| coding | `play-test` | Prepare realistic test state and guide the user through hands-on checks. |
 | coding | `tpp` | Work a living Technical Project Plan (TPP) from its current phase until its acceptance tests pass. |
 | coding | `handoff` | Update the active TPP so a later session can continue without rediscovery. |
 | coding | `tpp-orchestrate` | Drive a queue of TPPs through TDD, independent review gates, and coherent commits. |

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Play-test Changes"
+  short_description: "Set up and guide hands-on checks with the user"
+  default_prompt: "Use $coding:play-test to prepare test conditions for these changes and walk me through them one step at a time."

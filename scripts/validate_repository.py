@@ -18,6 +18,7 @@ EXPECTED_SKILL_WEBSITES = {
     ("coding", "find"): EXPECTED_WEBSITE,
     ("coding", "gitplan"): f"{EXPECTED_WEBSITE}clean-commits/#gitplan",
     ("coding", "handoff"): f"{EXPECTED_WEBSITE}claude-code-tpp/#handoff-wrap-up",
+    ("coding", "play-test"): f"{EXPECTED_WEBSITE}play-test/",
     ("coding", "replan"): f"{EXPECTED_WEBSITE}claude-code-replan/",
     ("coding", "review"): f"{EXPECTED_WEBSITE}claude-code-review/",
     ("coding", "review-staged"): f"{EXPECTED_WEBSITE}claude-code-review/#review-staged",
@@ -361,7 +362,7 @@ def validate_plugins_and_skills(validation: Validation, plugin_roots: dict[str, 
                 f"{marketplace_name}:{skill_name}",
             )
 
-    validation.check(validation.skill_count == 16, f"expected 16 skills, found {validation.skill_count}")
+    validation.check(validation.skill_count == 17, f"expected 17 skills, found {validation.skill_count}")
 
 
 def validate_install_documentation(validation: Validation) -> None:
