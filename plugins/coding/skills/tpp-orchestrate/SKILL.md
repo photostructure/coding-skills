@@ -63,7 +63,8 @@ only when:
 
 - a question would change what the TPP builds (steps 1 and 3);
 - the review gate ends without both reviewers landing the current scope,
-  because its four passes are spent or you accepted a `DISCARD`;
+  because its four passes are spent, you accepted a `DISCARD`, or an Open
+  question needs user direction;
 - ground truth contradicts the TPP;
 - the next action deletes data, force-pushes, or changes anything outside the
   repository.
@@ -111,12 +112,16 @@ out of it; the gate's reviewers read the code independently.
 You are the gate's third reviewer, and the only one who knows the whole roadmap.
 Read the new code yourself while the reviewers run.
 
+If the review stops with Open questions needing user direction, report them
+and wait before closing this TPP. Resume only after that direction or new
+evidence resolves them; do not restart the stopped work to obtain `LAND`.
+
 ### 5. Record the verdicts
 
-Report every finding — accepted **and** vetoed — in the per-TPP summary to the
-user, with the evidence for each verdict and which model raised it. Record the
-review in the TPP's **Working log**, as TPP-GUIDE's **Keeping TPPs useful**
-section describes; step 6 moves what lasts out of it.
+Report every finding, including Open questions and user waivers, in the per-TPP
+summary to the user, with the evidence for each disposition and which model
+raised it. Record the review in the TPP's **Working log**, as TPP-GUIDE's
+**Keeping TPPs useful** section describes; step 6 moves what lasts out of it.
 
 ### 6. Close out
 

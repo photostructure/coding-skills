@@ -231,7 +231,7 @@ runs `review` and returns
 its findings to the calling agent, which adjudicates them and resumes those
 same reviewer sessions with the results — same finding IDs, evidence for every
 accept and veto — until both reviewers land the current scope, a `DISCARD` is accepted,
-or four passes are spent.
+an Open question needs user direction, or four passes are spent.
 
 ## Adapting the workflows
 

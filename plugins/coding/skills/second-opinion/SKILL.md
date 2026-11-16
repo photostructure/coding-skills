@@ -8,25 +8,18 @@ metadata:
 # Second Opinion
 
 You know what the change was supposed to do, which makes you the worst judge of
-whether it does. Hand the complete requested scope to two fresh reviewers, one
-Codex and one Claude, settle what they find against ground truth, and send your
-decisions back to those same reviewers until both agree the change should land.
-Do not split agent reviews to meet a line count or reading-time budget; those
-limits belong to human gavel reviews.
+whether it does. Give fresh Codex and Claude sessions the complete requested
+review scope, then settle their findings against evidence. Do not split agent
+reviews to meet a line count or reading-time budget; those limits belong to
+human gavel reviews. Fresh reviewers can challenge assumptions the author's
+session has accumulated.
 
-1. List the files you changed and the commit message you propose.
-2. Ask both reviewers to review the complete scope, and read the same code
-   yourself while they work.
-3. Accept or veto each finding, with evidence.
-4. Pin each accepted finding with a test that fails, then fix it.
-5. Send both reviewer sessions your adjudication and the updated file list, and
-   have them re-read and re-review.
-6. Repeat 3-5 until both reviewers land the current tree, you accept a
-   `DISCARD`, or four passes are spent — then report.
-
-The other model brings different training, priors, and failure modes. The
-reviewer from your own model brings none of this session's context, so it
-cannot inherit the premises you have been working under. Use both.
+1. Prepare the scope, proposed commit message, requirements, and ground truth.
+2. Run both reviewers and read the same code yourself.
+3. Accept, veto, or leave open each finding, with evidence.
+4. Test and fix accepted findings within scope.
+5. Re-review in the same sessions, subject to the stop rules in step 5.
+6. Report findings, dispositions, and both reviewers' verdicts.
 
 ## User direction
 
@@ -39,6 +32,10 @@ project instructions require review before every commit.
 Without either instruction, follow project instructions: if they require
 review before every commit, finish reviewing the current changes unless the
 user explicitly says to skip review.
+
+An Open item, whether work stopped at the scope check or a claim nobody could
+test, is not a finished review: report it and wait for the user, even after
+"commit when ready".
 
 Accept the user's statement that review already happened; attribute it to them
 when reporting it. Do not demand a transcript or `LAND`, invent a review result,
@@ -296,82 +293,69 @@ marks that model's slot as missing.
 
 ## 3. Adjudicate every finding
 
-First set aside every concern that is only about the commit message, or about
-grouping, splitting, or ordering otherwise-valid content. Those are commit
-notes, not findings: no severity, no accept, no veto, no pinning test. Set aside
-each review's `Minor` section the same way, without telling the reviewers: fix
-an item only when it is cheap and another pass is already due, and otherwise
-leave it. A Minor item that meets the review method's bar for a finding is a
-finding; settle it like one. If commit notes and Minor items are all that any
-review raised, the verdict is `LAND`.
+Apply the [review method](../review/references/single-pass.md) to both
+reviewers' findings and your own. A `LAND` label does not excuse unresolved
+findings or Open questions. Reviewer agreement and confidence are not evidence;
+your own acceptances and vetoes need the same proof as theirs. Two reviewers can
+agree because they share the same mistaken premise.
 
-Hold your own read to the same reporting bar: what the review method would put
-under `Minor` or drop as arcana is not a finding when you raise it either.
+Keep commit-message and grouping concerns in `Commit notes`; they need no
+adjudication or pinning test and never affect the verdict. Set aside `Minor`
+items without asking reviewers to revisit them. Fix one only when cheap and
+another pass is already due. If a purported Minor item meets the finding
+threshold, adjudicate it as a finding. If only Minor items and commit notes
+remain, with no Open questions, the verdict is `LAND`.
 
-The verdict does not decide what you adjudicate. A `LAND` carrying findings
-still carries findings: settle every one. An empty findings list ends the work,
-not the word `LAND`.
+For each remaining finding:
 
-Then settle each remaining finding — both reviewers' and your own. An
-Unexplained finding follows its own rule below. For every other finding:
+1. **Screen relevance.** Check the production trigger, effect, and recovery
+   against the method's **Rate each defect** table before building a reproducer.
+   Veto defects it drops. A defect the user explicitly asked to fix bypasses
+   this rating, but still needs proof.
+2. **Check scope.** Apply **Screen before building a reproducer** to every
+   remaining finding, including Unexplained changes. If proving or fixing it
+   needs work beyond the task or accepted plan, stop that work and record
+   `Open`: trigger, effect, evidence, proved or suspected, estimated work,
+   and the missing proof or user decision. Finish independent work within scope.
+3. **Test the claim.** Run ground truth and the changed code on the same input.
+   Accept when the comparison proves a bug. Veto when it proves the code right
+   or the finding demands behavior no requirement specifies. If you cannot
+   test the claim, leave it Open.
+4. **Choose the remedy.** Use the smallest correct fix: every added line costs
+   more to review, debug, and maintain. When several fixes are defensible and
+   the requirements do not choose one, give the user the alternatives,
+   tradeoffs, and your recommendation; wait for direction.
 
-1. Build the empirical test: run ground truth and the new code on the same
-   input, and compare. A finding you cannot test this way becomes an open
-   question, not a silent acceptance.
-2. **Accept** only when ground truth confirms the bug.
-3. **Veto** only when ground truth confirms the code is right, or the finding
-   demands fidelity nothing requires — mirroring a reference implementation's
-   internals on a path no contract pins, for instance.
-4. When the diagnosis is right but the proposed fix is mediocre, take the better
-   fix. Reviewers identify problems; you own the remedy.
+For an **Unexplained** change, answer the reviewer's question instead of
+testing the claim:
 
-An Unexplained finding means the reviewer could not say why an added or
-modified function or branch exists from the code, tests, documentation, and
-commit message. No
-ground truth settles it. Answer the reviewer's question instead:
-
-- **Veto** when the answer is already in the code, tests, documentation, or
-  commit message. Cite where.
-- **Accept** when it is not, and put the answer there: a clearer name, a test,
-  a comment, or the commit message. Simplifying the code until no answer is
-  needed also settles it.
-- If you cannot answer the question either, trace what the code does until you
-  can, then accept or veto as above. A defect found this way is settled like
-  any other finding.
-
-Reviewer confidence, eloquence, and *agreement between reviewers* are not
-evidence. Two models converging on the same wrong finding is common; one command
-against ground truth beats both.
-
-**When two or more fixes are defensible and nothing chooses between them, ask
-the user.** Give the finding, each alternative with its tradeoff, and your
-recommendation if you have one, then wait for direction. Ground truth settles
-whether the code is wrong; it usually does not settle which correct design to
-adopt, and that choice is the user's.
-
-Your own context of settled decisions and corrected premises catches
-plausible-but-wrong findings a fresh reader cannot — that is why you adjudicate.
-It can also *contain* the defect: a wrong premise this session has carried since
-birth, which is exactly what the independent pass is for. So a veto of yours
-carries no special weight. It needs the same recorded evidence as anyone's.
+- Veto if the answer already exists in the code, tests, documentation, or
+  commit message; cite it.
+- Otherwise accept and put the answer there, or simplify away the unexplained
+  code. If you do not know the answer, trace the code within the scope check.
+- Treat any defect uncovered during that investigation as a normal finding.
 
 ## 4. Pin, then fix
 
-**Every accepted finding gets a pinning test** whose expected values come from
-ground truth; paste the command that produced them into the test's comment. Run
-it against the unfixed code and confirm it fails, then apply the fix. An
-accepted Unexplained finding whose fix changed no behavior — a rename, a
-comment, or a commit-message change — needs no pinning test. Every test the
-fixes could affect must pass again, not just the new pinning tests.
+For each accepted fix within scope, add a pinning test using expected values
+from ground truth. Include the command that produced them in the test comment.
+Confirm the test fails before the fix, apply the fix, then run every affected
+test. An Unexplained fix that changes no behavior needs no pinning test.
+
+If proving or fixing the issue grows beyond scope, mark it `Open` and stop.
+Accepting a diagnosis does not authorize extra implementation work.
 
 ## 5. Re-review in the same sessions
 
-Continue this loop only while review remains in scope under **User direction**.
+Follow **User direction** throughout. An Open question needing user direction
+stops work and repeated review on that question. Finish independent authorized
+fixes and tests, then report `REVISE`, the Open questions, and unreviewed changes.
+Resume stopped work only after new evidence or user direction resolves it;
+Open does not mean fixed or vetoed.
 
-Send your adjudication to both reviewers, even when you vetoed
-everything and changed no code. If you applied fixes, wait until every test
-they could affect passes. Re-read the complete current scope yourself, and ask
-each reviewer to do the same:
+Otherwise, send adjudication to both reviewers even if every finding was vetoed
+and no code changed. First pass all tests affected by fixes. Re-read the whole
+current scope yourself and ask both reviewers to do the same:
 
 ```text
 Re-read and re-review the complete current scope from the repository, then
@@ -380,8 +364,8 @@ and do not limit the review to the fixes.
 
 Author notes:
 Accepted <ID>: <diagnosis, the fix and its location, how it was validated>
-Vetoed <ID>: <the concrete evidence that the code is right>
-Open <ID>: <what is still unsettled, and what would settle it>
+Vetoed <ID>: <evidence that the code is right or the reporting bar is not met>
+Open <ID>: <proved or suspected, work stopped, cost, evidence or decision needed>
 
 Files now in play: <updated file list, including files the fixes touched>
 Proposed commit message: <current complete message>
@@ -439,61 +423,52 @@ and every accept and veto with its evidence. Record the replacement handle and
 disclose that continuity was unavailable. A resume failure does not justify
 skipping the re-review.
 
-Then return to step 3 for the new reports. **Stop when** both reviewers return
-`LAND` on the change as it now stands and every finding from all three reads is
-either accepted and fixed or vetoed with evidence. A `LAND` does not cover code
-you changed after that reviewer's last read: if adjudication changed the tree,
-run one more pass, subject to the cap. **Stop earlier** when you
-adjudicate a `DISCARD` as correct — the change should not land at all. Preserve
-that verdict and report it; do not re-review a settled decision.
+Return to step 3 after each pass. Stop when:
 
-Stop at four review passes either way. If the fourth leaves accepted
-fixes or disputed findings, finish the authorized fixes and tests, then report
-the cap and what is still unsettled; do not describe unreviewed fixes as a clean
-pass.
-Skip the loop entirely when the first pass raised nothing substantive and no
-code changed. Minor items never cause a pass: step 3 fixes them only when a
-finding already requires one, and that pass reviews them with everything else.
+- Both reviewers return `LAND` on the current tree and every finding is fixed,
+  vetoed with evidence, or explicitly waived by the user. Record waivers as
+  waivers, not fixes or disproof.
+- You accept a `DISCARD`. Report it without reviewing that settled decision again.
+- An Open question needs user direction, as described above.
+- The review reaches four passes. Finish only fixes and tests within scope,
+  then report the cap, unresolved findings, and unreviewed fixes.
+
+A verdict does not cover later edits: re-review the full current scope unless
+a stop rule applies. Skip re-review if the first pass raised no substantive
+issue and no code changed. Minor items alone never cause another pass.
 
 ## 6. Report the verdicts
 
-Summarize for the user (and for the PR description, when a PR tracks this
-work): every substantive finding, accepted **and** vetoed, with one-line
-evidence for each verdict, and which model raised it. Leave Minor items out.
+Report to the user and, when applicable, in the PR description:
 
-Begin with one top-level `Verdict: LAND | REVISE | DISCARD` line, then one line
-with the reviewed files, the pass count, and each model's final verdict:
-`src/a.ts, src/a.spec.ts: 2 passes; Codex LAND, Claude LAND`. Only a
-reviewer launched through that model's CLI fills its slot. Otherwise write why
-the slot is empty, for example `Codex missing (CLI not installed; Claude
-subagent LAND)` or `Claude missing (idle timeout)`. Project policy may act on
-these lines. If no review raised a substantive finding, use `LAND`, follow it
-with `No issues found.`, and do not invent ledger rows. Otherwise list the
-accepted and vetoed
-findings under their original IDs, even when the final verdict is `LAND`, and
-state any unresolved questions or unreviewed fixes separately.
+1. One top-level `Verdict: LAND | REVISE | DISCARD` line. Open questions require
+   `REVISE`.
+2. The reviewed files, pass count, and both models' final verdicts, for example:
+   `src/a.ts, src/a.spec.ts: 2 passes; Codex LAND, Claude LAND`.
+   Only that model's CLI fills its slot. Otherwise state why it is missing,
+   including any fallback result: `Claude missing (idle timeout)` or
+   `Codex missing (CLI not installed; Claude subagent LAND)`.
+3. Every substantive finding from all three reads, under its original ID,
+   including accepted, vetoed, Open, and waived items. State unreviewed fixes
+   separately. Omit Minor items. If there were no substantive findings or Open
+   questions, report `LAND` and `No issues found.` without inventing rows.
 
-The ledger repeats the final verdict in each row so a copied or aggregated row
-still reads correctly:
+Use this ledger; repeat the final verdict so copied rows retain their context:
 
-| ID | Scope | Model | Finding | Severity | Accept/Veto | Evidence (one line) | Verdict |
-| --- | --- | --- | --- | --- | --- | --- | --- |
+| ID | Scope | Model | Finding and trigger | Disposition | Evidence (one line) | Verdict |
+| --- | --- | --- | --- | --- | --- | --- |
 
-After the ledger — or after `No issues found.` when there are no rows — add a
-brief `Commit notes` section when either model proposed a warranted message or
-grouping improvement. Name the model, state the specific reason, and give the
-complete improved message. For a split, identify every independently committable
-group and give each group's complete message. These notes have no severity and
-cannot change the verdict.
+Add `Commit notes` only for warranted message or grouping improvements. Name the
+model, explain why, and give the complete proposed message. For a split, name
+each independently committable group and its message. These notes have no
+severity and cannot change the verdict.
 
-A plan document that tracks this work, such as a TPP, records the review as its
-own guide says. If that guide says nothing, then while the plan is unfinished
-it carries the reviewed files and pass count, each reviewer's CLI and session
-ID, and each finding by ID with its accept, veto, or open state and one line of
-evidence, so a later session can resume step 5 and see what was already
-vetoed. When the plan completes, it keeps only one line per vetoed finding (the
-claim and the evidence that refutes it), the final verdict with each missing
-slot, and the base commit the reviewed diff applies to.
+Follow the active plan's review-recording instructions. If it has none, record:
+
+- While unfinished: reviewed files and pass count, reviewer CLIs and session IDs,
+  and each finding's ID, disposition, and one line of evidence.
+- When complete: each vetoed or waived claim with its evidence or user ruling,
+  the final verdict and missing reviewer slots, and the reviewed base commit.
 
 ## Scratch files
 

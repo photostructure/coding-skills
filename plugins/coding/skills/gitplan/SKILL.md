@@ -52,10 +52,14 @@ If the repository has a layered structure (e.g. shared utilities → core → fe
 2. **Kick off the second-opinion reviewers on the staged diff, in the background if the host supports it** — step 2 of [`../second-opinion/SKILL.md`](../second-opinion/SKILL.md). Start them first so they run while you review. The reviewers have no staged-only scope, so name the staged file list in the prompt: "review these staged files: `<list>`. The other uncommitted changes belong to later commits; read them where they interact with the staged code. Report any defect the staged diff causes, including in callers or dependencies outside it."
 3. Review the staged changes yourself using the `review-staged` skill. Use a capable model — reviews are important.
 4. Collect the second opinions, then vet every finding from every review against ground truth and report the result — steps 3-6 of the gate. Accept and veto only with evidence.
-5. If issues are accepted:
-   - Present them clearly with priority, problem, and proposed fix.
+5. If fixes are accepted within the review's scope and cost check:
+   - Present them clearly with the problem, the proposed fix, and, for a
+     defect, its production trigger.
    - Apply fixes incrementally, re-staging as needed.
-   - Re-review until clean.
+   - Re-review subject to second-opinion's stop conditions.
+
+   If an Open question needs user direction, report it and wait on that work;
+   do not restart the stopped investigation or expand the fix to obtain `LAND`.
 6. Present the gate's report, including its pass count and model verdicts, with the proposed commit message, and ask for approval if commit authorization is still missing. When the user approves, commit immediately — no new review or second confirmation.
    - **Commit messages drive the changelog.** The body should describe user-facing behavior changes (what users will see/experience), not just implementation details. Lead with the "what changed for users" — implementation notes are secondary.
 

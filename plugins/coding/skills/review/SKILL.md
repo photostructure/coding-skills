@@ -10,6 +10,10 @@ metadata:
 Read and follow [`references/single-pass.md`](./references/single-pass.md), then
 review the scope you were given.
 
+When evaluating changes to this method, use
+[`references/calibration.md`](./references/calibration.md). It gives example
+dispositions and evaluation guidance; ordinary code reviews do not need it.
+
 ## Scratch files
 
 Any copy this workflow makes — of the repo, of a build-output directory, of a

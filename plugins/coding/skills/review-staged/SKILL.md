@@ -52,6 +52,10 @@ If the verdict is DISCARD, explain why the change should not land and stop the
 review. A later user instruction to commit takes precedence as described in
 **User direction**.
 
+If the report has Open questions, report them and wait for the user, even after
+"commit when ready" or "review, then commit". An instruction to "commit now"
+still commits.
+
 Otherwise:
 
 1. List the files (and line ranges, if partial) that are staged for commit.

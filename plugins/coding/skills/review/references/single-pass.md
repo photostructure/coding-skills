@@ -97,10 +97,28 @@ change. A mismatch between the message and the diff is a content finding only
 when the diff also violates an independent requirement. Otherwise, handle it as
 a commit note in the report format below.
 
-## Verify every candidate
+## Screen before building a reproducer
 
-This is the first filter. Report only issues that are actually wrong. For each
-candidate:
+Use the code and existing tests to identify the production trigger and apply
+**Rate each defect** before building a reproducer. Drop ruled-out candidates;
+put clearly Minor issues in `Minor`. Neither needs a dedicated harness.
+Investigate uncertain facts only within the scope check below.
+
+Estimate the work to prove the issue and make the smallest correct fix,
+including tests. If either needs a separate implementation effort beyond the
+user's task or accepted plan, stop that work. Examples include a new persistence
+mechanism, production hooks solely for testing, or a separate simulator. Local
+work using existing fixtures can proceed within scope; size alone does not stop
+explicitly authorized work.
+
+Record stopped work in `Open questions`: trigger, effect, evidence, whether
+proved or suspected, estimated work, and the missing proof or scope decision.
+Continue independent work. Open questions keep the verdict `REVISE` until
+resolved or explicitly waived; do not build extra machinery to obtain `LAND`.
+
+## Verify every remaining candidate
+
+Report only issues that are actually wrong. For each remaining candidate:
 
 1. Read the implementation, not only the diff.
 2. Trace the complete call path and search for all relevant callers and uses.
@@ -125,8 +143,7 @@ changing what anyone observes:
   unless a reader who follows the text as written would do the wrong thing: run
   a wrong command, rely on behavior the code does not have, or skip a required
   step. That is a defect; report it with the wrong action as its scenario.
-- An edge case whose triggering input or sequence you cannot attribute to a
-  real caller, user, or environment.
+- A defect that the table in **Rate each defect** drops.
 - A request to add a guard, check, or fallback against an input that cannot
   reach the code. A guard the change itself adds against such an input is an
   Unexplained change; report it.
@@ -140,21 +157,51 @@ Do not report an issue the code explicitly silences (`// eslint-disable`,
 `# noqa`, `@ts-expect-error`, and similar). The author already made that call
 deliberately. Report it only if you can prove the suppression itself is wrong.
 
+## Rate each defect
+
+Describe the production trigger, effect on the user or caller, and recovery.
+Support each with code, tests, or field evidence; do not assume severity from
+missing facts. A reproduction proves possibility, not real-world frequency.
+
+| Trigger | Disposition |
+| --- | --- |
+| Normal use, or a failure reported from a real install | Finding for incorrect behavior; Minor for cosmetic issues. |
+| A field fault: crash, full disk, lost connection, or concurrent processes/tabs | Finding for unrecoverable data loss or corruption, unauthorized exposure, or a wrong result with no workaround. Otherwise Minor. |
+| A contrived sequence with no identified real workflow | Drop. |
+| A state or ordering production cannot produce | Drop. |
+
+Normal use includes interaction during pending asynchronous work and crafted
+input an untrusted party can send to an exposed interface. Name the callers or
+interface that allow it. For field faults, name the interrupted operation.
+A real-install report overrides the other trigger categories; cite it.
+
+Judge the whole sequence, not each event in isolation. Explain why ordinary
+callers would not produce a sequence you drop as contrived. A narrow timing
+window alone does not make it contrived. Mocks and injected delays do not make
+a production-reachable failure tests-only; dropping it as impossible requires
+naming the production constraint it violates.
+
+For data loss or corruption, identify what the app cannot recover; for exposure,
+identify who receives the data. A retry, reload, restart, or automatic recovery
+can make a field-fault error Minor. It does not excuse incorrect normal-use
+behavior. Cosmetic means behavior remains correct, including any action the
+wording tells a reader to take.
+
+A proved defect the user explicitly asked to fix is a finding regardless of
+this table. Fix cost affects the scope check, not the disposition.
+
 ## Return the report
 
-This is the second filter, and the only place severity decides anything. Of the
-candidates that survived verification, report as findings every defect a user,
-caller, operator, or build would observe, and every Unexplained change. Also
-report as findings a violation of a rule the project states, dead code, and a
-test gap that would let a realistic regression pass. Drop unlikely corner
-cases.
+Report verified defects that **Rate each defect** keeps, and every Unexplained
+change. Also report as findings a violation of a rule the project states, dead
+code, and a test gap that would let a realistic regression pass.
 
-Put every other survivor — a misleading name, a weak error message or log
-line, a small test gap around working code, a small inefficiency — in a
-`Minor` section after the findings, one line each
-with its `file:line`. Minor items get no ID and no priority, are not tracked
-across passes, and never change the verdict. The author may fix them or ignore
-them without answering you. Omit the section when it would be empty.
+Put every other survivor — a defect the table rates Minor, a misleading name, a
+weak error message or log line, a small test gap around working code, a small
+inefficiency — in `Minor` after the findings, one line each with its
+`file:line`. Minor items get no ID and no priority, are not tracked across
+passes, and never change the verdict. The author may fix them or ignore them
+without answering you. Omit the section when it would be empty.
 
 Begin with exactly one top-level verdict:
 
@@ -170,10 +217,11 @@ Begin with exactly one top-level verdict:
   unnecessary, or the problem is already handled elsewhere. This is an expected
   review outcome, not a failure of the review.
 
-Sort findings by severity. For each finding include:
+List defects involving unrecoverable data loss, corruption, or unauthorized
+exposure first, then other defects, then other findings. For each include:
 
-- **Priority:** Critical, High, or Medium
-- **Problem:** what fails and the concrete triggering scenario
+- **Trigger:** for a defect, the concrete production steps or fault
+- **Problem:** what fails and whether recovery is available
 - **Proof:** the traced path, test, or ground-truth comparison
 - **Solution:** a focused correction
 - **Location:** `file:line`
@@ -182,9 +230,14 @@ For an Unexplained change, **Problem** names the question you could not answer,
 **Proof** lists what you read and why it did not answer the question, and
 **Solution** is the question the author must answer.
 
-Require proof for every finding. If no finding survives verification, write
-`No issues found.` after the verdict; a `Minor` section may still follow. Do
-not pad the report.
+Require proof for every finding, including one whose fix exceeds scope. Put
+stopped work in a separate `Open questions` section: reuse the finding's ID
+when the defect is proved, and assign an ID from the same namespace otherwise.
+A suspected defect whose investigation the scope and cost check stopped
+belongs only in Open questions; discard other undemonstrated candidates under
+step 5 of **Verify every remaining candidate**. If neither findings nor
+Open questions remain, write `No issues found.` after the verdict; a `Minor`
+section may still follow. Do not pad the report.
 
 After all findings, add a brief `Commit notes` section only when the commit
 message or grouping warrants a change. Each note must state the recommendation
@@ -225,6 +278,11 @@ existing finding's ID and give new issues the next unused suffix; never recycle
 an ID for a different issue. Dispute a veto when its evidence is insufficient,
 and say what evidence would settle it. List a Minor item only on the first pass
 that notices it.
+
+Carry Open questions forward without repeating the stopped investigation.
+Resume that work only when new evidence resolves the question or the user
+authorizes the extra scope. A user waiver settles the review disposition;
+record it without claiming the defect was fixed or disproved.
 
 An Unexplained change is resolved when its answer is in the code, tests,
 documentation, or commit message, including an answer the author shows was
