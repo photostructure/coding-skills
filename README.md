@@ -223,8 +223,10 @@ context. Setup-only plugins do not invent reviewer agents.
 `second-opinion` is the deliberate exception to the host-neutral rule: its whole
 job is to shell out to both vendors' CLIs (plain `codex exec` with a
 `$coding:review` prompt, `claude -p` with a `/coding:review` prompt), so it
-names both hosts. The validator allows those exact review invocations in that
-one file and applies every other portability rule to it. Both fresh reviewers
+names both hosts. The validator allows those exact review invocations in the
+skill entrypoint and [CLI protocol](plugins/coding/skills/second-opinion/references/reviewer-cli.md).
+It checks launch and resume commands and their model flags in the protocol;
+every other portability rule still applies. Both fresh reviewers
 receive the complete requested scope, without line-count or reading-time
 limits. When a CLI is missing or unauthenticated, a subagent reviews in its
 place, and the report marks that model's verdict as missing. Each reviewer

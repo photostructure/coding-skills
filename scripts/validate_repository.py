@@ -446,7 +446,11 @@ def validate_portability_tokens(validation: Validation) -> None:
             "$coding:review",
         ),
     }
-    second_opinion_exempt = {Path("plugins/coding/skills/second-opinion/SKILL.md")}
+    second_opinion_entrypoint = Path("plugins/coding/skills/second-opinion/SKILL.md")
+    second_opinion_cli = Path(
+        "plugins/coding/skills/second-opinion/references/reviewer-cli.md"
+    )
+    second_opinion_exempt = {second_opinion_entrypoint, second_opinion_cli}
 
     for path in operational:
         relative = path.relative_to(ROOT)
@@ -475,7 +479,7 @@ def validate_portability_tokens(validation: Validation) -> None:
                 continue
             validation.errors.append(f"{relative}:{number}: unexpected Claude runtime reference")
 
-    second_opinion_relative = "plugins/coding/skills/second-opinion/SKILL.md"
+    second_opinion_relative = str(second_opinion_cli)
     second_opinion_content = (ROOT / second_opinion_relative).read_text(
         encoding="utf-8"
     )
@@ -541,8 +545,12 @@ def validate_portability_tokens(validation: Validation) -> None:
         )
 
     for relative in (
+        str(second_opinion_entrypoint),
         second_opinion_relative,
         "plugins/coding/skills/stage/SKILL.md",
+        "plugins/coding/skills/stage/references/commit-messages.md",
+        "plugins/coding/references/howto-commit.md",
+        "plugins/coding/references/scratch-files.md",
     ):
         content = (ROOT / relative).read_text(encoding="utf-8")
         shell_tokens = {
