@@ -25,6 +25,14 @@ whether it makes sense. Keep the walkthrough short and interactive.
 3. Give the user the exact URL, screen, or command to open. Describe the starting
    state and have them confirm it matches the scenario they intend to test.
 
+   For mobile browser testing, generate and display a QR code with a local QR
+   encoder, alongside a clickable link to the same full test URL. Use the
+   development machine's LAN address with the phone on the same network and
+   the server listening on that interface, or an existing reachable preview URL.
+   Do not encode `localhost`, a loopback address, or `0.0.0.0`. Preserve the
+   URL's path, query, and fragment. Have the user confirm that scanning the code
+   opens the intended build on their phone before continuing.
+
 4. Give one action, or a small group of closely related actions, with the
    expected visible result and what to report back. Show any script you ask the
    user to run and explain what it changes so they can read it first.
