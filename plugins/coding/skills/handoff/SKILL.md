@@ -7,11 +7,8 @@ metadata:
 
 # TPP Handoff
 
-> Documented in depth: [Claude Code has amnesia. So do PRs, changelogs, and your future self.](https://photostructure.com/coding/claude-code-tpp/)
-
-We're out of time and need to hand off the remaining work. The Technical Project
-Plan (TPP) is the handoff document — whatever this session learned must end up in
-the file, or the next session re-learns it the hard way.
+Update the active Technical Project Plan (TPP) so the next session can continue
+unfinished work without rediscovering this session's findings.
 
 ## Required Reading First
 

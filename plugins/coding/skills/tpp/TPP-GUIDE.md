@@ -12,13 +12,7 @@ sessions or multiple engineers.
 Each engineer reads it, does work, documents discoveries, and updates the file
 so the next engineer can continue without starting over.
 
-Every bit of context in the TPP should help the next engineer succeed.
-
-## Golden rule
-
-A good TPP transfers expertise, not just instructions.
-
-It should explain:
+Record context the next engineer needs:
 
 - What problem we are solving for users
 - Which approaches were considered
@@ -26,7 +20,8 @@ It should explain:
 - Which tests and edge cases reveal the problem
 - How to adapt if nearby architecture changes
 
-These same answers serve four readers: the next session, the reviewer of the PR, the engineer drafting release notes, and whoever inherits this code years from now. Write once; serve all four.
+These answers also help PR reviewers, release-note authors, and future
+maintainers.
 
 ## Typical process
 
@@ -223,12 +218,9 @@ anything the code, the tests, or `git log` already say.
 that broke it, the file that defines the constraint — don't describe them. The
 next session can read the real thing, and the real thing doesn't go stale.
 
-**Never record a count that drifts.** "36 tests passing", "12 files changed",
-coverage percentages — all stale the moment the next commit lands, and worse
-than useless: a reviewer who spots the mismatch spends their attention arguing
-that the number is off by one instead of on the work. Record the command that
-produces the number, not the number. `npm test -- tag-gallery` passes is a
-durable claim; "36 tests pass" is a hostage to the next commit.
+**Record commands instead of counts that drift.** Test counts, changed-file
+counts, and coverage percentages become stale as work continues. Record the
+command and its result, such as `npm test -- tag-gallery` passes.
 
 **Keep session records in the Working log, and only until the plan is done.**
 While the plan is unfinished, its **Working log** lets the next session see
@@ -263,58 +255,39 @@ or moves it to `_done/`. Record each where it lasts:
   evidence that refutes it.
 - A misstep a later engineer could repeat gets one line under **Lore**.
 
-The high-value sections are **Lore** and the failed approaches under
-**Solutions**: gotchas, dead ends, and the *why* behind decisions are exactly
-what a fresh session cannot recover from the repository. Everything else is
-scaffolding — keep it thin.
-
-These four readers all pay for bloat and all benefit from the same edit: the
-next session, the PR reviewer, whoever drafts the release notes, and whoever
-inherits this code years from now. Trim process ceremony, not the reasoning.
+Keep **Lore** and the failed approaches under **Solutions** focused on context
+a fresh session cannot recover from the repository. Cut repeated process
+instructions while preserving the reasons for decisions.
 
 ## How long should a TPP be?
 
-Wrong question — and any number that answers it becomes an anchor people write
-toward. **Length is a symptom. The rule underneath it is focus.**
+A TPP covers one coherent piece of work. State its purpose in one sentence
+without an "and". If that fails, trim the plan or organize it as a feature arc.
+Use focus, not a line budget, to decide its length:
 
-A TPP covers one coherent piece of work. The test: say what it does in one
-sentence, without an "and". If you can't, you're holding either a plan that
-needs trimming or a feature arc that needs children.
-
-Why it matters isn't tidiness. Every line you leave in costs the next engineer
-attention and context window — a budget they cannot top up, spent on your notes
-instead of the problem. Writing a tome spends someone else's scarcest resource.
-
-Three rules, no arithmetic:
-
-- **Never pad.** A 60-line plan that says everything beats a 200-line plan
-  saying the same thing. The template is a menu, not a form: delete any heading
-  with nothing worth saying under it.
+- **Never pad.** Use only the template sections the work needs; delete empty
+  headings.
 - **Never trim reasoning to hit a number.** If a plan is long because it carries
   hard-won lore, it is correctly long. Cut scaffolding, restated code, and
   drifting counts first — and if it's still long after that, it's fine.
-- **Treat length as a prompt to re-read, not a limit.** Somewhere past a couple
-  hundred lines, stop and ask the focus question. Usually the answer is bloat.
-  Occasionally it's an arc.
+- **Use length as a prompt to re-read.** Past a couple hundred lines, revisit
+  the focus question rather than enforcing a limit.
 
 ### When the work really is bigger
 
-Don't shred a focused plan into siblings that must coordinate — that moves the
-complexity into the gaps between files, where nobody owns it. Promote it to a
-**feature arc** instead: one coordination TPP over several focused children.
+Keep tightly coupled work in one plan. For work with independently testable
+parts, use a **feature arc**: one coordination TPP over focused child plans.
 
 The arc owns the shape of the work — dependency and merge order, the completion
-gate, the lore every child needs, and the one-sentence purpose. The children own
-the work itself: their own tasks, tests, and gotchas. An arc that starts
-accumulating implementation detail has stopped being an arc and become a tome
-with extra steps.
+gate, the lore every child needs, and the one-sentence purpose. Children own
+their tasks, tests, and gotchas. Keep implementation detail in the children.
 
 An arc stays short *because* its children are focused. In the layouts above, the
 arc is the `_feat-<name>/README.md`.
 
 Children need real seams: each must be **independently testable and
 independently mergeable**. If a child can't be verified without its sibling's
-code, that isn't a seam — it's one plan wearing two filenames.
+code, keep that work in one plan.
 
 ## Handoff rules
 

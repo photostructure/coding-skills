@@ -7,42 +7,25 @@ metadata:
 
 # TPP Orchestration
 
-> Documented in depth: [Claude Code has amnesia. So do PRs, changelogs, and your future self.](https://photostructure.com/coding/claude-code-tpp/)
+Execute a documented queue of Technical Project Plans (TPPs), using its roadmap
+or `README.md` for dependency order. The queue may be a backlog such as `_todo/`
+or a feature integration queue such as `_feat-auth/`.
 
-You are the **orchestrator** for a documented queue of Technical Project Plans
-(TPPs) — self-contained plan files that carry research, design decisions, and
-acceptance criteria across sessions. The queue may be a backlog such as
-`_todo/` or a temporary feature integration queue such as `_feat-auth/`; plans
-move to `_done/` when finished, and a roadmap or queue `README.md` defines the
-order. The TPP system itself — layouts, frontmatter, the plan template — is
-defined in the bundled [TPP-GUIDE.md](../tpp/TPP-GUIDE.md), or the project's own
-`docs/TPP-GUIDE.md`, which wins. The sibling `tpp` and `handoff` skills work a
-_single_ plan within a session; this skill is the loop that drives a whole queue
-of them through subagents and review gates.
-
-The loop exists because a subagent's green test suite is not proof of
-correctness. [`../second-opinion/SKILL.md`](../second-opinion/SKILL.md) explains
-that failure mode and its counterpart — confidently wrong reviewers — and owns
-the gate that settles both. This skill owns the queue around it: delegate,
-gate, record, commit, repeat.
+Read the project's `docs/TPP-GUIDE.md` when present; otherwise use the bundled
+[TPP-GUIDE.md](../tpp/TPP-GUIDE.md). The guide owns plan layout and lifecycle;
+[second-opinion](../second-opinion/SKILL.md) owns the review gate. This skill
+owns delegation, queue order, recording, and one commit per completed plan.
+Use [tpp](../tpp/SKILL.md) to work one plan directly and
+[handoff](../handoff/SKILL.md) to leave unfinished work ready to resume.
 
 ## User direction
 
-The review gates below are workflow defaults. If the user directs you to commit
-the current work, follow that instruction without starting or resuming a review,
-waiting for a reviewer verdict, or asking for approval again, unless the user
-also requests review first. Use [stage](../stage/SKILL.md) to verify and commit
-the understood scope. Record completed, skipped, and unfinished review work
-accurately; do not mark unfinished implementation or acceptance criteria done.
+A request to execute this queue includes the one commit per completed TPP in
+step 6. Do not ask again for those commits.
+Read and follow the shared [commit instructions](../../references/howto-commit.md).
+
 An instruction about the current commit does not waive reviews for later TPPs.
-An instruction to "commit now" ends review: stop any running reviewers, do not
-start or resume one, and commit, even when project instructions require review
-before every commit. An instruction to "commit when ready" means let any running
-or required review finish first, then commit without asking for approval again.
-Otherwise, when project instructions require review before every commit, a
-commit instruction for changes that review has not finished on since they last
-changed runs the review first, and only an explicit instruction to skip review
-skips it.
+Do not mark unfinished implementation or acceptance criteria done.
 
 ## Before the first TPP
 
