@@ -16,15 +16,8 @@ dispositions and evaluation guidance; ordinary code reviews do not need it.
 
 ## Scratch files
 
-Any copy this workflow makes — of the repo, of a build-output directory, of a
-file you replay edits onto — belongs in the operating system's temporary
-directory, in a fresh directory named for the project and the purpose. Never
-inside the checkout, and never under a home directory.
-
-Delete it before you finish. A repo or build-output copy runs to gigabytes,
-nothing reaps a home directory, and the out-of-disk failure that eventually
-follows surfaces somewhere unrelated — a test suite that hangs, a build that
-dies mid-link — costing far more to diagnose than the copy ever saved.
+Before making repository, build-output, or replay copies, read and follow the
+shared [scratch-copy rules](../../references/scratch-files.md).
 
 ## Adapting for your project
 

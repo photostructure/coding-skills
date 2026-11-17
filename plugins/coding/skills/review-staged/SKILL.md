@@ -14,20 +14,7 @@ requirement.
 
 ## User direction
 
-A direct "commit" or "approved, commit" instruction authorizes the understood
-scope and takes precedence over this skill's review and approval defaults.
-Unless the user also requests review first, use [stage](../stage/SKILL.md) to
-verify and commit that scope without starting or resuming a review or asking
-for approval again. This also applies after findings or a review verdict; a
-reviewer's recommendation does not overrule the user's commit instruction.
-An instruction to "commit now" ends review: stop any running reviewers, do not
-start or resume one, and commit, even when project instructions require review
-before every commit. An instruction to "commit when ready" means let any running
-or required review finish first, then commit without asking for approval again.
-Otherwise, when project instructions require review before every commit, a
-commit instruction for changes that review has not finished on since they last
-changed runs the review first, and only an explicit instruction to skip review
-skips it.
+Read and follow the shared [commit instructions](../../references/howto-commit.md).
 
 ## Run the review
 
@@ -69,12 +56,5 @@ Otherwise:
 
 ## Scratch files
 
-Any copy this workflow makes — of the repo, of a build-output directory, of a
-file you replay edits onto — belongs in the operating system's temporary
-directory, in a fresh directory named for the project and the purpose. Never
-inside the checkout, and never under a home directory.
-
-Delete it before you finish. A repo or build-output copy runs to gigabytes,
-nothing reaps a home directory, and the out-of-disk failure that eventually
-follows surfaces somewhere unrelated — a test suite that hangs, a build that
-dies mid-link — costing far more to diagnose than the copy ever saved.
+Before making repository, build-output, or replay copies, read and follow the
+shared [scratch-copy rules](../../references/scratch-files.md).
